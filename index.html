@@ -1135,6 +1135,10 @@
                 const lockName = document.getElementById('lock-station-name');
                 if (lockName) lockName.innerText = selectedStation;
                 if (lockOverlay) lockOverlay.classList.remove('hidden');
+
+                if (activeBadge) {
+                    activeBadge.innerText = `CHƯA XÁC THỰC: ${selectedStation}`;
+                    activeBadge.className = "bg-amber-200 text-amber-900 text-xs px-2.5 py-0.5 rounded-full font-extrabold border border-amber-300";
                 }
                 if (authBtnText) authBtnText.innerText = "Đăng Nhập Nhập Liệu Trạm";
                 if (headerStationBadge) headerStationBadge.innerText = "Chế độ: Xem Báo Cáo Tổng Hợp";
