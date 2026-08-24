@@ -290,11 +290,22 @@
                         </button>
                     </div>
 
-                    <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-                        <h4 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-file-pen text-teal-700"></i> Bảng Báo Cáo Tháng Cho: <span id="entry-station-title" class="text-teal-800 font-black">ĐỨC TÂN</span>
-                        </h4>
-                        <span class="text-[11px] text-slate-500 font-medium">* Bấm nút "Lưu & Đồng Bộ" bên dưới để tự động ghi nhận vào Google Sheet và Nhật ký lịch sử</span>
+                    <div class="p-3 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-file-pen text-teal-700"></i> Bảng Báo Cáo Tháng Cho: <span id="entry-station-title" class="text-teal-800 font-black">ĐỨC TÂN</span>
+                            </h4>
+                            <span class="text-[11px] text-slate-500 font-medium">* Dữ liệu sau khi lưu sẽ tự động ghi vào Sheet trạm và Sheet Lưu Trữ Lịch Sử Tháng trên Google Sheet</span>
+                        </div>
+
+                        <!-- Ô TÌM GÕ VẮC XIN / VẬT TƯ CÓ GỢI Ý & LỌC NHANH -->
+                        <div class="relative w-full sm:w-80">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-teal-600 text-xs"></i>
+                            <input type="text" id="search-station-entry" oninput="filterStationEntryRows()" placeholder="🔍 Gõ tìm nhanh vắc xin / vật tư..." class="w-full pl-9 pr-8 py-1.5 bg-white text-slate-800 border border-slate-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-teal-500 focus:outline-none shadow-sm" autocomplete="off">
+                            <button onclick="clearStationEntrySearch()" id="btn-clear-entry-search" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs" title="Xóa tìm kiếm">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto custom-scrollbar">
@@ -330,9 +341,14 @@
                             <p class="text-xs text-slate-400">Nhấn nút bên cạnh để TỰ ĐỘNG CẬP NHẬT TRỰC TIẾP VÀO GOOGLE SHEET và Nhật ký lịch sử.</p>
                         </div>
                     </div>
-                    <button onclick="saveCurrentStationData()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold px-8 py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-lg">
-                        <i class="fa-solid fa-cloud-arrow-up text-base"></i> LƯU & TỰ ĐỘNG CẬP NHẬT GOOGLE SHEET
-                    </button>
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                        <button onclick="exportStationPDF()" class="w-full sm:w-auto bg-rose-600 hover:bg-rose-500 text-white font-extrabold px-6 py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer" title="Xuất/In báo cáo tháng của trạm ra file PDF">
+                            <i class="fa-solid fa-file-pdf text-base"></i> XUẤT BÁO CÁO PDF
+                        </button>
+                        <button onclick="saveCurrentStationData()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold px-8 py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer">
+                            <i class="fa-solid fa-cloud-arrow-up text-base"></i> LƯU & TỰ ĐỘNG CẬP NHẬT GOOGLE SHEET
+                        </button>
+                    </div>
                 </div>
 
             </div>
@@ -1165,7 +1181,7 @@
                 const closing = rec.opening + rec.imported - rec.used - rec.waste;
 
                 rowsHtml += `
-                    <tr class="hover:bg-slate-50 transition-colors">
+                    <tr class="hover:bg-slate-50 transition-colors station-entry-row" data-name="${item.name.toLowerCase()}" data-id="${item.id.toLowerCase()}">
                         <td class="py-2.5 px-3 text-center text-slate-500 font-mono text-xs">${index++}</td>
                         <td class="py-2.5 px-3 font-semibold text-slate-800">
                             ${item.name}
@@ -1195,6 +1211,62 @@
             });
 
             tbody.innerHTML = rowsHtml;
+            filterStationEntryRows();
+        }
+
+        function filterStationEntryRows() {
+            const searchInput = document.getElementById('search-station-entry');
+            const clearBtn = document.getElementById('btn-clear-entry-search');
+            if (!searchInput) return;
+
+            const query = searchInput.value.toLowerCase().trim();
+            if (clearBtn) {
+                if (query.length > 0) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+
+            const rows = document.querySelectorAll('.station-entry-row');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const name = row.getAttribute('data-name') || '';
+                const id = row.getAttribute('data-id') || '';
+
+                if (!query || name.includes(query) || id.includes(query)) {
+                    row.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+
+            // Hiển thị dòng báo không tìm thấy nếu từ khóa không khớp
+            let noResultRow = document.getElementById('entry-no-result-row');
+            if (visibleCount === 0 && query.length > 0) {
+                if (!noResultRow) {
+                    const tbody = document.getElementById('station-entry-table-body');
+                    if (tbody) {
+                        const tr = document.createElement('tr');
+                        tr.id = 'entry-no-result-row';
+                        tr.innerHTML = `<td colspan="9" class="text-center py-8 text-slate-400 bg-slate-50/50"><i class="fa-solid fa-magnifying-glass text-2xl mb-2 block text-slate-300"></i>Không tìm thấy vắc xin/vật tư khớp với từ khóa "<strong>${searchInput.value}</strong>"</td>`;
+                        tbody.appendChild(tr);
+                    }
+                } else {
+                    noResultRow.classList.remove('hidden');
+                    noResultRow.innerHTML = `<td colspan="9" class="text-center py-8 text-slate-400 bg-slate-50/50"><i class="fa-solid fa-magnifying-glass text-2xl mb-2 block text-slate-300"></i>Không tìm thấy vắc xin/vật tư khớp với từ khóa "<strong>${searchInput.value}</strong>"</td>`;
+                }
+            } else if (noResultRow) {
+                noResultRow.classList.add('hidden');
+            }
+        }
+
+        function clearStationEntrySearch() {
+            const searchInput = document.getElementById('search-station-entry');
+            if (searchInput) {
+                searchInput.value = '';
+                filterStationEntryRows();
+                searchInput.focus();
+            }
         }
 
         function calculateRowClosing(itemId) {
@@ -1304,6 +1376,158 @@
                 updateSheetStatusBadge(true, `Đã tự động lưu & đồng bộ Google Sheets thành công!`);
                 showToast(`✅ Đã tự động cập nhật số liệu trạm ${authenticatedStation} vào Google Sheet!`);
             }
+        }
+
+        function exportStationPDF() {
+            const stationSelect = document.getElementById('select-active-station');
+            const activeStation = stationSelect ? stationSelect.value : "ĐỨC TÂN";
+
+            const periodEl = document.getElementById('select-month-period');
+            const rawPeriod = periodEl ? periodEl.value : '2026-08';
+            const periodParts = rawPeriod.split('-');
+            const year = periodParts[0] || '2026';
+            const month = periodParts[1] || '08';
+
+            let itemsData = [];
+            let index = 1;
+
+            MASTER_ITEMS.forEach(item => {
+                const opEl = document.getElementById(`input-opening-${item.id}`);
+                const impEl = document.getElementById(`input-imported-${item.id}`);
+                const usEl = document.getElementById(`input-used-${item.id}`);
+                const wsEl = document.getElementById(`input-waste-${item.id}`);
+                const ntEl = document.getElementById(`input-note-${item.id}`);
+
+                const opening = opEl ? parseInt(opEl.value) || 0 : 0;
+                const imported = impEl ? parseInt(impEl.value) || 0 : 0;
+                const used = usEl ? parseInt(usEl.value) || 0 : 0;
+                const waste = wsEl ? parseInt(wsEl.value) || 0 : 0;
+                const note = ntEl ? ntEl.value || "" : "";
+                const closing = opening + imported - used - waste;
+
+                itemsData.push({
+                    stt: index++,
+                    code: item.id,
+                    name: item.name,
+                    unit: item.unit,
+                    opening,
+                    imported,
+                    used,
+                    waste,
+                    closing,
+                    note
+                });
+            });
+
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+                showToast("Vui lòng cho phép mở popup trên trình duyệt để in/xuất file PDF!", "error");
+                return;
+            }
+
+            const rowsHtml = itemsData.map(item => `
+                <tr>
+                    <td style="text-align: center; font-size: 11px;">${item.stt}</td>
+                    <td style="text-align: center; font-family: monospace; font-size: 11px;">${item.code}</td>
+                    <td style="font-weight: bold; font-size: 12px;">${item.name}</td>
+                    <td style="text-align: center; font-size: 11px;">${item.unit}</td>
+                    <td style="text-align: right; font-family: monospace; font-size: 11px;">${item.opening.toLocaleString()}</td>
+                    <td style="text-align: right; font-family: monospace; font-size: 11px;">${item.imported > 0 ? '+' + item.imported.toLocaleString() : '0'}</td>
+                    <td style="text-align: right; font-family: monospace; font-size: 11px;">${item.used > 0 ? '-' + item.used.toLocaleString() : '0'}</td>
+                    <td style="text-align: right; font-family: monospace; font-size: 11px;">${item.waste > 0 ? '-' + item.waste.toLocaleString() : '0'}</td>
+                    <td style="text-align: right; font-family: monospace; font-weight: bold; font-size: 12px; background-color: #f0fdfa;">${item.closing.toLocaleString()}</td>
+                    <td style="font-size: 11px;">${item.note || ''}</td>
+                </tr>
+            `).join('');
+
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html lang="vi">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Báo Cáo XNT Vắc Xin & Vật Tư - TYT ${activeStation} - Tháng ${month}/${year}</title>
+                    <style>
+                        @page { size: A4 landscape; margin: 10mm; }
+                        body { font-family: 'Times New Roman', Times, serif; color: #000; margin: 0; padding: 10px; font-size: 12px; line-height: 1.3; }
+                        .header-table { width: 100%; margin-bottom: 15px; border-collapse: collapse; }
+                        .header-table td { vertical-align: top; text-align: center; }
+                        .title { font-size: 16px; font-weight: bold; text-transform: uppercase; text-align: center; margin: 15px 0 5px 0; letter-spacing: 0.5px; }
+                        .subtitle { font-size: 13px; font-style: italic; text-align: center; margin-bottom: 15px; }
+                        .report-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                        .report-table th, .report-table td { border: 1px solid #333; padding: 5px 6px; }
+                        .report-table th { background-color: #e2e8f0; font-weight: bold; text-align: center; font-size: 11px; }
+                        .footer-table { width: 100%; margin-top: 25px; border-collapse: collapse; page-break-inside: avoid; }
+                        .footer-table td { text-align: center; vertical-align: top; width: 50%; }
+                        .sign-space { height: 75px; }
+                    </style>
+                </head>
+                <body>
+                    <table class="header-table">
+                        <tr>
+                            <td style="width: 45%;">
+                                <strong>SỞ Y TẾ / TRUNG TÂM Y TẾ HUYỆN</strong><br>
+                                <strong style="text-transform: uppercase;">TRẠM Y TẾ XÃ/THỊ TRẤN ${activeStation}</strong>
+                            </td>
+                            <td style="width: 55%;">
+                                <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong><br>
+                                <u>Độc lập - Tự do - Hạnh phúc</u>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="title">BÁO CÁO XUẤT NHẬP TỒN VẮC XIN VÀ VẬT TƯ TIÊM CHỦNG</div>
+                    <div class="subtitle">Kỳ Báo Cáo: Tháng ${month} Năm ${year}</div>
+
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px;">STT</th>
+                                <th style="width: 65px;">Mã Số</th>
+                                <th>Tên Vắc Xin / Vật Tư Y Tế</th>
+                                <th style="width: 50px;">ĐVT</th>
+                                <th style="width: 70px;">Tồn Đầu</th>
+                                <th style="width: 70px;">Nhập Trong</th>
+                                <th style="width: 70px;">Xuất Tiêm</th>
+                                <th style="width: 70px;">Hao Phí</th>
+                                <th style="width: 80px;">Tồn Cuối</th>
+                                <th style="width: 130px;">Ghi Chú Số Lô / Hạn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHtml}
+                        </tbody>
+                    </table>
+
+                    <table class="footer-table">
+                        <tr>
+                            <td>
+                                <br>
+                                <strong>NGƯỜI LẬP BÁO CÁO</strong><br>
+                                <i>(Ký, ghi rõ họ tên)</i>
+                                <div class="sign-space"></div>
+                            </td>
+                            <td>
+                                <i>${activeStation}, ngày ..... tháng ..... năm 20...</i><br>
+                                <strong>TRƯỞNG TRẠM Y TẾ</strong><br>
+                                <i>(Ký tên, đóng dấu)</i>
+                                <div class="sign-space"></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <script>
+                        window.onload = function() {
+                            setTimeout(function() {
+                                window.print();
+                            }, 300);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `;
+
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
         }
 
         function renderCompareTable() {
