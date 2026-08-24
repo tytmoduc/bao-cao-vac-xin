@@ -7,8 +7,8 @@
 
     <script>
         // =========================================================================
-        // CẤU HÌNH CỐ ĐỊNH NẰM NGAY ĐẦU THẺ <HEAD>
-        // Tự động lấy dữ liệu danh mục vắc xin & báo cáo từ Google Sheets khi mở web
+        // CẤU HÌNH HỆ THỐNG ẨN TRONG MÃ NGUỒN HEAD (KHÔNG LỘ TRÊN GIAO DIỆN)
+        // Dán đường dẫn Google Sheet và Apps Script Web App trực tiếp tại đây:
         // =========================================================================
         window.CONFIG = {
             // 1. Đường dẫn Google Sheet chính
@@ -20,8 +20,8 @@
             // 3. Tự động cập nhật dữ liệu từ Google Sheet khi tải trang web
             AUTO_FETCH_ON_LOAD: true,
 
-            // 4. URL Apps Script Web App (Dán link Web App triển khai từ Google Sheets để TỰ ĐỘNG LƯU)
-            WEB_APP_URL: ""
+            // 4. URL Apps Script Web App (Dán link Web App triển khai từ Google Sheets để TỰ ĐỘNG LƯU VÀO SHEET)
+            WEB_APP_URL: "" // Dán link Web App Apps Script vào đây (ví dụ: https://script.google.com/macros/s/.../exec)
         };
     </script>
 
@@ -40,37 +40,21 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
 
-    <!-- Top Banner: Link Google Sheet Tích Hợp & Trạng Thái Đồng Bộ -->
+    <!-- Top Banner: Trạng Thái Đồng Bộ Báo Cáo Google Sheet (Đã ẩn các ô dán Link) -->
     <div class="bg-slate-900 text-white border-b border-slate-800 py-2.5 px-4 sm:px-6 lg:px-8 shadow-inner">
-        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-3 text-xs">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <div class="flex items-center gap-2 shrink-0">
-                <i class="fa-solid fa-file-excel text-emerald-400 text-base"></i>
-                <span class="font-bold text-slate-200">GOOGLE SHEET ĐỒNG BỘ:</span>
+                <i class="fa-solid fa-cloud-check text-emerald-400 text-base"></i>
+                <span class="font-bold text-slate-200">TRẠNG THÁI ĐỒNG BỘ GOOGLE SHEET:</span>
                 <span id="sheet-status-badge" class="bg-emerald-500/20 text-emerald-300 text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-emerald-400/30 flex items-center gap-1">
                     <i class="fa-solid fa-arrows-rotate text-emerald-400 animate-spin"></i> Đang tự động kết nối...
                 </span>
             </div>
 
-            <div class="flex flex-col sm:flex-row items-center gap-2 w-full lg:w-auto">
-                <div class="relative w-full sm:w-64">
-                    <i class="fa-solid fa-link absolute left-3 top-1/2 -translate-y-1/2 text-teal-400 text-xs"></i>
-                    <input type="text" id="input-sheet-url" value="" placeholder="Link Google Sheet..." class="w-full pl-8 pr-2 py-1.5 bg-slate-800 text-teal-200 font-mono text-xs rounded-lg border border-slate-700 focus:outline-none focus:ring-1 focus:ring-teal-400" title="Link file Google Sheet">
-                </div>
-                <div class="relative w-full sm:w-64">
-                    <i class="fa-solid fa-gears absolute left-3 top-1/2 -translate-y-1/2 text-amber-400 text-xs"></i>
-                    <input type="text" id="input-webapp-url" value="" placeholder="Link Web App Script (Lưu tự động)..." class="w-full pl-8 pr-2 py-1.5 bg-slate-800 text-amber-200 font-mono text-xs rounded-lg border border-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-400" title="Link Web App Apps Script để tự động lưu">
-                </div>
-                <div class="flex items-center gap-1.5 shrink-0 w-full sm:w-auto">
-                    <button onclick="fetchDataFromGoogleSheet()" title="Làm mới dữ liệu từ Google Sheets" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1 shadow">
-                        <i class="fa-solid fa-rotate"></i> Tải Sheet
-                    </button>
-                    <button onclick="saveGoogleSheetUrl()" title="Lưu thông tin link đồng bộ" class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1 shadow">
-                        <i class="fa-solid fa-floppy-disk"></i> Lưu Cấu Hình
-                    </button>
-                    <button onclick="openGoogleSheetUrl()" id="btn-open-sheet" title="Mở file Google Sheet trên tab mới" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1 shadow">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở Sheet
-                    </button>
-                </div>
+            <div class="flex items-center gap-2">
+                <button onclick="fetchDataFromGoogleSheet()" title="Làm mới dữ liệu từ Google Sheets" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 shadow cursor-pointer">
+                    <i class="fa-solid fa-rotate"></i> Làm Mới Dữ Liệu
+                </button>
             </div>
         </div>
     </div>
@@ -108,10 +92,6 @@
 
                 <button onclick="promptStationAuthModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3.5 py-2 rounded-lg text-xs transition-all flex items-center gap-2 shadow-md">
                     <i class="fa-solid fa-key"></i> <span id="auth-btn-text">Đăng Nhập Nhập Liệu Trạm</span>
-                </button>
-
-                <button onclick="showTab('setup-guide')" class="bg-teal-600 hover:bg-teal-500 text-white font-semibold px-3.5 py-2 rounded-lg text-xs transition-all flex items-center gap-1.5 shadow-md">
-                    <i class="fa-solid fa-database"></i> Vị Trí Lưu Sheet
                 </button>
             </div>
         </div>
@@ -168,81 +148,19 @@
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 mb-6 overflow-hidden">
             <!-- Navigation Tabs -->
             <div class="border-b border-slate-200 px-4 flex flex-wrap gap-1 bg-slate-50/80 pt-2 overflow-x-auto">
-                <button onclick="showTab('summary')" id="tab-btn-summary" class="tab-btn tab-active py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
-                    <i class="fa-solid fa-table text-teal-700"></i> Bảng Tổng Hợp 4 Trạm
-                </button>
-                <button onclick="showTab('station-entry')" id="tab-btn-station-entry" class="tab-btn text-slate-600 hover:text-teal-800 py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
+                <button onclick="showTab('station-entry')" id="tab-btn-station-entry" class="tab-btn tab-active py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
                     <i class="fa-solid fa-pen-to-square text-amber-600"></i> Nhập Báo Cáo Đơn Vị Trạm
+                </button>
+                <button onclick="showTab('summary')" id="tab-btn-summary" class="tab-btn text-slate-600 hover:text-teal-800 py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
+                    <i class="fa-solid fa-table text-teal-700"></i> Bảng Tổng Hợp 4 Trạm
                 </button>
                 <button onclick="showTab('station-compare')" id="tab-btn-station-compare" class="tab-btn text-slate-600 hover:text-teal-800 py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
                     <i class="fa-solid fa-columns text-indigo-600"></i> So Sánh 4 Trạm Y Tế
                 </button>
-                <button onclick="showTab('catalog-manage')" id="tab-btn-catalog-manage" class="tab-btn text-slate-600 hover:text-teal-800 py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
-                    <i class="fa-solid fa-boxes-packing text-emerald-600"></i> Danh Mục Vắc Xin Tối Ưu
-                </button>
-                <button onclick="showTab('setup-guide')" id="tab-btn-setup-guide" class="tab-btn text-slate-600 hover:text-amber-800 py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
-                    <i class="fa-solid fa-map-location-dot text-amber-600"></i> Vị Trí Lưu Số Liệu Google Sheet
-                </button>
-                <button onclick="showTab('gas-script')" id="tab-btn-gas-script" class="tab-btn text-slate-600 hover:text-emerald-700 py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
-                    <i class="fa-solid fa-file-code text-emerald-600"></i> Mã Google Apps Script
-                </button>
             </div>
 
-            <!-- Tab 1: Summary -->
-            <div id="tab-content-summary" class="tab-content p-4 sm:p-6">
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-4">
-                    <div class="flex flex-wrap items-center gap-3">
-                        <div class="relative min-w-[240px]">
-                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                            <input type="text" id="search-summary" oninput="renderSummaryTable()" placeholder="Tìm vắc xin, vật tư..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
-                        </div>
-                        <select id="filter-category" onchange="renderSummaryTable()" class="border border-slate-300 rounded-lg px-3 py-2 text-xs font-semibold bg-white text-slate-700 focus:ring-2 focus:ring-teal-500 focus:outline-none">
-                            <option value="ALL">Tất cả danh mục</option>
-                            <option value="VẮC XIN TCMR">Vắc xin TCMR</option>
-                            <option value="VẬT TƯ TIÊM CHỦNG">Vật tư tiêm chủng</option>
-                        </select>
-                    </div>
-                    <button onclick="exportSummaryCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2 rounded-lg shadow-sm flex items-center gap-2 justify-center transition-all">
-                        <i class="fa-solid fa-file-excel"></i> Xuất Báo Cáo Excel / CSV
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl">
-                    <table class="w-full text-left text-xs">
-                        <thead>
-                            <tr class="bg-slate-800 text-white font-semibold text-center tracking-wider">
-                                <th class="p-3 border-r border-slate-700 w-12">STT</th>
-                                <th class="p-3 border-r border-slate-700 w-24">Mã Số</th>
-                                <th class="p-3 border-r border-slate-700 text-left">Tên Vắc Xin & Vật Tư Y Tế</th>
-                                <th class="p-3 border-r border-slate-700 w-16">ĐVT</th>
-                                <th class="p-3 border-r border-slate-700 bg-slate-900">Tồn Đầu</th>
-                                <th class="p-3 border-r border-slate-700 bg-emerald-950/80 text-emerald-300">Nhập Trong</th>
-                                <th class="p-3 border-r border-slate-700 bg-indigo-950/80 text-indigo-300">Xuất Tiêm</th>
-                                <th class="p-3 border-r border-slate-700 bg-rose-950/80 text-rose-300">Hao Phí</th>
-                                <th class="p-3 border-r border-slate-700 bg-teal-950 text-teal-200 font-extrabold">Tồn Cuối (4 Trạm)</th>
-                                <th class="p-3 w-32">Trạng Thái Kho</th>
-                            </tr>
-                        </thead>
-                        <tbody id="summary-table-body" class="divide-y divide-slate-200">
-                            <!-- Populated dynamically -->
-                        </tbody>
-                        <tfoot>
-                            <tr class="bg-slate-900 text-white font-bold text-right border-t-2 border-slate-700">
-                                <td colspan="4" class="p-3 text-center uppercase tracking-wider">Tổng Cộng Toàn Huyện (4 Trạm):</td>
-                                <td class="p-3 font-mono" id="foot-sum-opening">0</td>
-                                <td class="p-3 font-mono text-emerald-400" id="foot-sum-imported">+0</td>
-                                <td class="p-3 font-mono text-indigo-400" id="foot-sum-used">-0</td>
-                                <td class="p-3 font-mono text-rose-400" id="foot-sum-waste">-0</td>
-                                <td class="p-3 font-mono text-teal-300 text-sm font-black bg-teal-950/90" id="foot-sum-closing">0</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Tab 2: Station Entry -->
-            <div id="tab-content-station-entry" class="tab-content p-4 sm:p-6 hidden relative">
+            <!-- Tab 1: Station Entry (Default Active View) -->
+            <div id="tab-content-station-entry" class="tab-content p-4 sm:p-6 relative">
                 
                 <!-- Station Selector Banner -->
                 <div class="bg-slate-900 text-white p-4 rounded-xl mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-md">
@@ -353,6 +271,59 @@
 
             </div>
 
+            <!-- Tab 2: Summary -->
+            <div id="tab-content-summary" class="tab-content p-4 sm:p-6 hidden">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-4">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="relative min-w-[240px]">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" id="search-summary" oninput="renderSummaryTable()" placeholder="Tìm vắc xin, vật tư..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                        </div>
+                        <select id="filter-category" onchange="renderSummaryTable()" class="border border-slate-300 rounded-lg px-3 py-2 text-xs font-semibold bg-white text-slate-700 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                            <option value="ALL">Tất cả danh mục</option>
+                            <option value="VẮC XIN TCMR">Vắc xin TCMR</option>
+                            <option value="VẬT TƯ TIÊM CHỦNG">Vật tư tiêm chủng</option>
+                        </select>
+                    </div>
+                    <button onclick="exportSummaryCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2 rounded-lg shadow-sm flex items-center gap-2 justify-center transition-all">
+                        <i class="fa-solid fa-file-excel"></i> Xuất Báo Cáo Excel / CSV
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-800 text-white font-semibold text-center tracking-wider">
+                                <th class="p-3 border-r border-slate-700 w-12">STT</th>
+                                <th class="p-3 border-r border-slate-700 w-24">Mã Số</th>
+                                <th class="p-3 border-r border-slate-700 text-left">Tên Vắc Xin & Vật Tư Y Tế</th>
+                                <th class="p-3 border-r border-slate-700 w-16">ĐVT</th>
+                                <th class="p-3 border-r border-slate-700 bg-slate-900">Tồn Đầu</th>
+                                <th class="p-3 border-r border-slate-700 bg-emerald-950/80 text-emerald-300">Nhập Trong</th>
+                                <th class="p-3 border-r border-slate-700 bg-indigo-950/80 text-indigo-300">Xuất Tiêm</th>
+                                <th class="p-3 border-r border-slate-700 bg-rose-950/80 text-rose-300">Hao Phí</th>
+                                <th class="p-3 border-r border-slate-700 bg-teal-950 text-teal-200 font-extrabold">Tồn Cuối (4 Trạm)</th>
+                                <th class="p-3 w-32">Trạng Thái Kho</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary-table-body" class="divide-y divide-slate-200">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="bg-slate-900 text-white font-bold text-right border-t-2 border-slate-700">
+                                <td colspan="4" class="p-3 text-center uppercase tracking-wider">Tổng Cộng Toàn Huyện (4 Trạm):</td>
+                                <td class="p-3 font-mono" id="foot-sum-opening">0</td>
+                                <td class="p-3 font-mono text-emerald-400" id="foot-sum-imported">+0</td>
+                                <td class="p-3 font-mono text-indigo-400" id="foot-sum-used">-0</td>
+                                <td class="p-3 font-mono text-rose-400" id="foot-sum-waste">-0</td>
+                                <td class="p-3 font-mono text-teal-300 text-sm font-black bg-teal-950/90" id="foot-sum-closing">0</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
             <!-- Tab 3: Station Comparison -->
             <div id="tab-content-station-compare" class="tab-content p-4 sm:p-6 hidden">
                 <div class="mb-4">
@@ -399,204 +370,6 @@
                             <!-- Populated dynamically -->
                         </tbody>
                     </table>
-                </div>
-            </div>
-
-            <!-- Tab 4: Catalog Management (Read-Only from Google Sheet 01_DANH_MUC_VAC_XIN) -->
-            <div id="tab-content-catalog-manage" class="tab-content p-4 sm:p-6 hidden">
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 bg-slate-900 text-white p-4 rounded-xl shadow-md border-l-4 border-emerald-500">
-                    <div>
-                        <h3 class="font-bold text-base flex items-center gap-2">
-                            <i class="fa-solid fa-shield-halved text-emerald-400"></i> Danh Mục Vắc Xin & Vật Tư Y Tế (Quản lý 1 chiều từ Google Sheet)
-                        </h3>
-                        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
-                            🔒 <strong>Cơ chế bảo vệ dữ liệu:</strong> Danh mục vắc xin chuẩn được quản lý cố định trên Google Sheet (Sheet <code class="bg-slate-800 text-emerald-300 px-1 py-0.5 rounded font-mono">01_DANH_MUC_VAC_XIN</code>). Trạm y tế chỉ có quyền <strong>ĐỌC</strong> để nhập số liệu báo cáo, <strong>không thể xóa hay tự ý chỉnh sửa danh mục từ trang web</strong> để tránh mất mát dữ liệu của toàn huyện.
-                        </p>
-                    </div>
-                    <button onclick="fetchDataFromGoogleSheet()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-lg text-xs transition-all flex items-center gap-2 shadow shrink-0">
-                        <i class="fa-solid fa-arrows-rotate"></i> Tải Lại Danh Mục Từ Google Sheet
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl">
-                    <table class="w-full text-left text-xs">
-                        <thead>
-                            <tr class="bg-slate-800 text-white font-semibold text-center">
-                                <th class="p-3 border-r border-slate-700 w-12">STT</th>
-                                <th class="p-3 border-r border-slate-700 w-24">Mã Số</th>
-                                <th class="p-3 border-r border-slate-700 text-left">Tên Vắc Xin / Vật Tư Y Tế</th>
-                                <th class="p-3 border-r border-slate-700 w-20">ĐVT</th>
-                                <th class="p-3 border-r border-slate-700 w-36">Phân Loại</th>
-                                <th class="p-3 border-r border-slate-700 w-28">Tồn Tối Thiểu</th>
-                                <th class="p-3 w-36">Nguồn Dữ Liệu</th>
-                            </tr>
-                        </thead>
-                        <tbody id="catalog-table-body" class="divide-y divide-slate-200 bg-white">
-                            <!-- Populated dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Tab 5: Detailed Google Sheet Storage Structure Guide -->
-            <div id="tab-content-setup-guide" class="tab-content p-4 sm:p-6 hidden">
-                <div class="mb-6 bg-gradient-to-r from-teal-900 via-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-md border border-teal-800">
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-teal-500/20 text-teal-300 border border-teal-400/30 rounded-xl flex items-center justify-center text-2xl font-bold shrink-0 shadow-inner">
-                            <i class="fa-solid fa-map-location-dot"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
-                                BÁO CÁO TỪNG THÁNG SẼ ĐƯỢC LƯU Ở ĐÂU TRÊN GOOGLE SHEETS?
-                            </h3>
-                            <p class="text-xs sm:text-sm text-teal-200/90 mt-1 leading-relaxed">
-                                Dữ liệu báo cáo của từng Trạm Y Tế khi bấm <strong>"Lưu Báo Cáo"</strong> sẽ tự động lưu vào <strong>3 VỊ TRÍ CHÍNH</strong> trên file Google Sheet của bạn.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3 Storage Locations Visual Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    
-                    <!-- Location 1 -->
-                    <div class="bg-white border-2 border-indigo-200 rounded-2xl p-4 shadow-sm hover:border-indigo-400 transition-all">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-800 font-black text-xs flex items-center justify-center">1</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900 text-sm">Sheet Riêng Từng Trạm</h4>
-                                <span class="font-mono text-[10px] text-indigo-600 font-semibold">TYT_Xa_1 | TYT_Xa_2...</span>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
-                            Mỗi Trạm Y Tế có 1 Sheet tương ứng. Khi trạm báo cáo số liệu mới, bảng này sẽ ngay lập tức được ghi nhận và tính toán số dư tồn cuối tháng hiện tại.
-                        </p>
-                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-[11px] text-slate-700 font-mono">
-                            📌 <strong>Nội dung:</strong> STT, Mã Số, Tên Vắc Xin, ĐVT, Tồn Đầu, Nhập, Xuất, Hao Phí, Tồn Cuối, Ghi Chú.
-                        </div>
-                    </div>
-
-                    <!-- Location 2 -->
-                    <div class="bg-white border-2 border-emerald-200 rounded-2xl p-4 shadow-sm hover:border-emerald-400 transition-all">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center">2</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900 text-sm">Sheet Lưu Trữ Lịch Sử</h4>
-                                <span class="font-mono text-[10px] text-emerald-600 font-semibold">Luu_Tru_Bao_Cao_Cac_Thang</span>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
-                            <strong>Nơi lưu nhật ký hàng tháng:</strong> Mỗi lần bấm "Lưu Báo Cáo", một bản sao số liệu tháng đó sẽ được lưu lại vĩnh viễn kèm cột <strong>Kỳ Báo Cáo (Tháng/Năm)</strong>.
-                        </p>
-                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-[11px] text-slate-700 font-mono">
-                            📌 <strong>Ưu điểm:</strong> Không lo mất số liệu tháng cũ, dễ dàng tra cứu lịch sử báo cáo các tháng trước.
-                        </div>
-                    </div>
-
-                    <!-- Location 3 -->
-                    <div class="bg-white border-2 border-teal-200 rounded-2xl p-4 shadow-sm hover:border-teal-400 transition-all">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 font-black text-xs flex items-center justify-center">3</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900 text-sm">Sheet Tổng Hợp Huyện</h4>
-                                <span class="font-mono text-[10px] text-teal-600 font-semibold">00_TONG_HOP_4_TRAM</span>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
-                            Hệ thống tự động cộng dồn số liệu của cả 4 trạm y tế lại thành 1 bảng tổng hợp chung toàn huyện để Trung tâm Y tế dễ dàng báo cáo cấp trên.
-                        </p>
-                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-[11px] text-slate-700 font-mono">
-                            📌 <strong>Nội dung:</strong> Tổng tồn kho, tổng nhập, tổng xuất tiêm chủng toàn huyện.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Complete 6 Sheet Diagram Table -->
-                <div class="bg-slate-50 border border-slate-300 rounded-2xl p-5 shadow-sm">
-                    <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-list-check text-teal-700"></i> CHI TIẾT DANH SÁCH SHEET ĐƯỢC TẠO TỰ ĐỘNG TRÊN GOOGLE SHEETS
-                    </h4>
-                    <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left text-xs border border-slate-300 bg-white">
-                            <thead>
-                                <tr class="bg-slate-800 text-white font-bold text-center">
-                                    <th class="p-2.5 border">Tên Sheet (Tab Name)</th>
-                                    <th class="p-2.5 border">Mục Đích Sử Dụng</th>
-                                    <th class="p-2.5 border">Ai Sử Dụng / Nhập Liệu</th>
-                                    <th class="p-2.5 border">Cơ Chế Cập Nhật Dữ Liệu</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-200">
-                                <tr>
-                                    <td class="p-2.5 border font-mono font-bold text-teal-800 bg-teal-50">00_TONG_HOP_4_TRAM</td>
-                                    <td class="p-2.5 border font-medium">Tổng hợp XNT toàn huyện của 4 Trạm</td>
-                                    <td class="p-2.5 border font-semibold text-slate-700">Lãnh đạo TTYT / Chuyên viên</td>
-                                    <td class="p-2.5 border text-slate-600">Tự động cộng từ 4 trạm bằng Script</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2.5 border font-mono font-bold text-emerald-800 bg-emerald-50">01_DANH_MUC_VAC_XIN</td>
-                                    <td class="p-2.5 border font-medium">Quản lý danh mục vắc xin & vật tư y tế chuẩn (1 chiều)</td>
-                                    <td class="p-2.5 border font-semibold text-emerald-700">Quản trị viên / Cán bộ vắc xin</td>
-                                    <td class="p-2.5 border text-slate-600">Tạo trực tiếp trên Sheet, tự động đẩy về Web</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2.5 border font-mono font-bold text-indigo-800">ĐỨC TÂN</td>
-                                    <td class="p-2.5 border">Báo cáo XNT tháng hiện tại của ĐỨC TÂN</td>
-                                    <td class="p-2.5 border font-semibold text-indigo-700">Cán bộ ĐỨC TÂN</td>
-                                    <td class="p-2.5 border text-slate-600">Tự động lưu từ WebApp khi bấm Lưu</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2.5 border font-mono font-bold text-indigo-800">THỊ TRẤN</td>
-                                    <td class="p-2.5 border">Báo cáo XNT tháng hiện tại của THỊ TRẤN</td>
-                                    <td class="p-2.5 border font-semibold text-indigo-700">Cán bộ THỊ TRẤN</td>
-                                    <td class="p-2.5 border text-slate-600">Tự động lưu từ WebApp khi bấm Lưu</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2.5 border font-mono font-bold text-indigo-800">ĐỨC HÒA</td>
-                                    <td class="p-2.5 border">Báo cáo XNT tháng hiện tại của ĐỨC HÒA</td>
-                                    <td class="p-2.5 border font-semibold text-indigo-700">Cán bộ ĐỨC HÒA</td>
-                                    <td class="p-2.5 border text-slate-600">Tự động lưu từ WebApp khi bấm Lưu</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2.5 border font-mono font-bold text-indigo-800">ĐỨC PHÚ</td>
-                                    <td class="p-2.5 border">Báo cáo XNT tháng hiện tại của ĐỨC PHÚ</td>
-                                    <td class="p-2.5 border font-semibold text-indigo-700">Cán bộ ĐỨC PHÚ</td>
-                                    <td class="p-2.5 border text-slate-600">Tự động lưu từ WebApp khi bấm Lưu</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2.5 border font-mono font-bold text-emerald-800 bg-emerald-50">Luu_Tru_Bao_Cao_Cac_Thang</td>
-                                    <td class="p-2.5 border font-medium">Lưu trữ kho dữ liệu lịch sử từng tháng (Tháng 1, 2...8, 9)</td>
-                                    <td class="p-2.5 border font-semibold text-emerald-700">Tự động lưu nhật ký vĩnh viễn</td>
-                                    <td class="p-2.5 border text-slate-600">Tự động ghi nối tiếp mỗi kỳ báo cáo</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 6: Apps Script Source Code -->
-            <div id="tab-content-gas-script" class="tab-content p-4 sm:p-6 hidden">
-                <div class="mb-4 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <div>
-                        <h3 class="text-emerald-950 font-bold text-sm sm:text-base flex items-center gap-2">
-                            <i class="fa-solid fa-code text-emerald-600"></i> Mã Google Apps Script Cho Google Sheets
-                        </h3>
-                        <p class="text-emerald-800 text-xs mt-1">
-                            Copy mã bên dưới dán vào <strong>Tiện ích mở rộng (Extensions) &gt; Apps Script</strong> trên Google Sheets của bạn để tự động hóa tạo popup nhập mật khẩu, lưu nhật ký hàng tháng và tổng hợp tự động!
-                        </p>
-                    </div>
-                    <button onclick="copyGasCode()" id="btn-copy-gas" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow-md flex items-center gap-2 whitespace-nowrap transition-all">
-                        <i class="fa-solid fa-copy"></i> Sao Chép Toàn Bộ Mã Script
-                    </button>
-                </div>
-
-                <div class="relative rounded-xl overflow-hidden border border-slate-800 bg-slate-900 text-slate-100">
-                    <div class="bg-slate-800 px-4 py-2 flex items-center justify-between text-xs text-slate-400 border-b border-slate-700 font-mono">
-                        <span><i class="fa-regular fa-file-code text-teal-400"></i> Code.gs - Google Apps Script (Tiếng Việt)</span>
-                        <span>Google Sheets Engine</span>
-                    </div>
-                    <pre class="p-4 text-xs font-mono overflow-x-auto custom-scrollbar leading-relaxed text-emerald-300" id="gas-code-display"></pre>
                 </div>
             </div>
         </div>
@@ -684,12 +457,8 @@
         // Currently authenticated station
         let authenticatedStation = null;
 
-        // Saved Google Sheet Link
-        let savedGoogleSheetUrl = (window.CONFIG && window.CONFIG.GOOGLE_SHEET_URL) ? window.CONFIG.GOOGLE_SHEET_URL : "";
-
         document.addEventListener("DOMContentLoaded", () => {
             initSampleData();
-            loadGoogleSheetUrl();
 
             // TỰ ĐỘNG CẬP NHẬT LẤY THÔNG TIN TỪ GOOGLE SHEETS KHI MỞ WEBSITE
             if (window.CONFIG && window.CONFIG.AUTO_FETCH_ON_LOAD) {
@@ -697,10 +466,9 @@
             } else {
                 renderSummaryTable();
                 renderCompareTable();
-                renderCatalogTable();
             }
 
-            generateGASCodeString();
+            checkStationLockState();
         });
 
         function getSpreadsheetIdFromUrl(url) {
@@ -713,16 +481,16 @@
         }
 
         async function fetchDataFromGoogleSheet() {
-            const currentUrl = document.getElementById('input-sheet-url')?.value || savedGoogleSheetUrl;
+            const currentUrl = window.CONFIG?.GOOGLE_SHEET_URL || "";
             const spreadsheetId = getSpreadsheetIdFromUrl(currentUrl);
 
             if (!spreadsheetId) {
-                updateSheetStatusBadge(false, "Thiếu ID Google Sheet");
-                showToast("Không tìm thấy ID Google Sheet hợp lệ!", "error");
+                updateSheetStatusBadge(false, "Thiếu ID Google Sheet trong CONFIG");
+                showToast("Không tìm thấy ID Google Sheet hợp lệ trong cấu hình!", "error");
                 return;
             }
 
-            updateSheetStatusBadge("loading", "Đang tải danh mục 1 chiều từ Google Sheets...");
+            updateSheetStatusBadge("loading", "Đang tự động đồng bộ từ Google Sheets...");
 
             // 1. TỰ ĐỘNG TẢI DANH MỤC CỐ ĐỊNH TỪ SHEET 01_DANH_MUC_VAC_XIN
             try {
@@ -806,7 +574,6 @@
 
             renderSummaryTable();
             renderCompareTable();
-            renderCatalogTable();
             if (authenticatedStation) renderStationEntryTable(authenticatedStation);
 
             if (successCount > 0) {
@@ -938,8 +705,6 @@
                 renderSummaryTable();
             } else if (tabName === 'station-compare') {
                 renderCompareTable();
-            } else if (tabName === 'catalog-manage') {
-                renderCatalogTable();
             }
         }
 
@@ -959,41 +724,10 @@
             }
             renderSummaryTable();
             renderCompareTable();
-            renderCatalogTable();
             if (authenticatedStation) {
                 renderStationEntryTable(authenticatedStation);
             }
             showToast(`Đã chuyển sang số liệu ${selectedPeriod}`);
-        }
-
-        function renderCatalogTable() {
-            const tbody = document.getElementById('catalog-table-body');
-            if (!tbody) return;
-
-            let rowsHtml = '';
-            MASTER_ITEMS.forEach((item, index) => {
-                rowsHtml += `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="py-2.5 px-3 text-center text-slate-500 font-mono text-xs">${index + 1}</td>
-                        <td class="py-2.5 px-3 font-semibold text-slate-700 font-mono text-xs">${item.id}</td>
-                        <td class="py-2.5 px-3 font-bold text-slate-800">${item.name}</td>
-                        <td class="py-2.5 px-3 text-center font-medium text-slate-600">${item.unit}</td>
-                        <td class="py-2.5 px-3 text-center">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.category === 'VẮC XIN TCMR' ? 'bg-teal-100 text-teal-800' : 'bg-indigo-100 text-indigo-800'}">
-                                ${item.category}
-                            </span>
-                        </td>
-                        <td class="py-2.5 px-3 text-right font-mono font-bold text-slate-700">${item.minStock.toLocaleString()}</td>
-                        <td class="py-2.5 px-3 text-center">
-                            <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-mono text-[10px] font-bold inline-flex items-center gap-1">
-                                <i class="fa-solid fa-lock text-[9px]"></i> 01_DANH_MUC_VAC_XIN
-                            </span>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            tbody.innerHTML = rowsHtml;
         }
 
         function renderSummaryTable() {
