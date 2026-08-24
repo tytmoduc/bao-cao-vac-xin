@@ -7,20 +7,20 @@
 
     <script>
         // =========================================================================
-        // CẤU HÌNH NẰM NGAY ĐẦU THẺ <HEAD> - BẠN CÓ THỂ SỬA TRỰC TIẾP TẠI ĐÂY
-        // Mỗi khi người dùng truy cập website, hệ thống sẽ TỰ ĐỘNG lấy thông tin mới nhất từ Google Sheets
+        // CẤU HÌNH CỐ ĐỊNH NẰM NGAY ĐẦU THẺ <HEAD>
+        // Tự động lấy dữ liệu mới nhất từ Google Sheets ngay khi truy cập trang web
         // =========================================================================
         window.CONFIG = {
-            // 1. Đường dẫn file Google Sheet chính
+            // 1. Đường dẫn Google Sheet chính
             GOOGLE_SHEET_URL: "https://docs.google.com/spreadsheets/d/1TOreIqAK8d-nUaZGJFJB4oz6F3fTixqJSTTsOSMHEJI/edit",
             
             // 2. ID file Google Sheet (Trích xuất từ URL)
             SPREADSHEET_ID: "1TOreIqAK8d-nUaZGJFJB4oz6F3fTixqJSTTsOSMHEJI",
 
-            // 3. Tùy chọn tự động cập nhật lấy thông tin ngay khi mở website
+            // 3. Tự động cập nhật dữ liệu từ Google Sheet khi tải trang web
             AUTO_FETCH_ON_LOAD: true,
 
-            // 4. Đường dẫn Apps Script Web App (Tùy chọn nếu triển khai Web App API)
+            // 4. URL Apps Script Web App (Dán link Web App triển khai từ Google Sheets để TỰ ĐỘNG LƯU)
             WEB_APP_URL: ""
         };
     </script>
@@ -104,8 +104,8 @@
                     <i class="fa-solid fa-key"></i> <span id="auth-btn-text">Đăng Nhập Nhập Liệu Trạm</span>
                 </button>
 
-                <button onclick="showTab('gas-script')" class="bg-teal-600 hover:bg-teal-500 text-white font-semibold px-3.5 py-2 rounded-lg text-xs transition-all flex items-center gap-1.5 shadow-md">
-                    <i class="fa-solid fa-code"></i> Code Apps Script
+                <button onclick="showTab('setup-guide')" class="bg-teal-600 hover:bg-teal-500 text-white font-semibold px-3.5 py-2 rounded-lg text-xs transition-all flex items-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-database"></i> Vị Trí Lưu Sheet
                 </button>
             </div>
         </div>
@@ -151,7 +151,7 @@
                 <div>
                     <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Trạm Đã Hoàn Thành Báo Cáo</p>
                     <h3 class="text-2xl font-black text-emerald-600 mt-1" id="kpi-stations-submitted">4 / 4</h3>
-                    <p class="text-xs text-emerald-600 font-semibold mt-1"><i class="fa-solid fa-circle-check"></i> Đã khóa dữ liệu tháng</p>
+                    <p class="text-xs text-emerald-600 font-semibold mt-1"><i class="fa-solid fa-circle-check"></i> Đã đồng bộ Google Sheet</p>
                 </div>
                 <div class="w-11 h-11 bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center text-lg font-bold border border-emerald-100">
                     <i class="fa-solid fa-clipboard-check"></i>
@@ -171,13 +171,14 @@
                     <i class="fa-solid fa-columns text-indigo-600"></i> So Sánh 4 Trạm Y Tế
                 </button>
                 <button onclick="showTab('setup-guide')" id="tab-btn-setup-guide" class="tab-btn text-slate-600 hover:text-amber-800 py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
-                    <i class="fa-solid fa-graduation-cap text-amber-600"></i> Hướng Dẫn Setup Google Sheets
+                    <i class="fa-solid fa-map-location-dot text-amber-600"></i> Vị Trí Lưu Số Liệu Google Sheet
                 </button>
                 <button onclick="showTab('gas-script')" id="tab-btn-gas-script" class="tab-btn text-slate-600 hover:text-emerald-700 py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
                     <i class="fa-solid fa-file-code text-emerald-600"></i> Mã Google Apps Script
                 </button>
             </div>
 
+            <!-- Tab 1: Summary -->
             <div id="tab-content-summary" class="tab-content p-4 sm:p-6">
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-4">
                     <div class="flex flex-wrap items-center gap-3">
@@ -230,6 +231,7 @@
                 </div>
             </div>
 
+            <!-- Tab 2: Station Entry -->
             <div id="tab-content-station-entry" class="tab-content p-4 sm:p-6 hidden relative">
                 
                 <!-- Station Selector Banner -->
@@ -259,7 +261,7 @@
                             <i class="fa-solid fa-key"></i> Nhập Mật Khẩu
                         </button>
                         <button onclick="saveCurrentStationData()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs transition-all flex items-center gap-1.5 shadow-md">
-                            <i class="fa-solid fa-floppy-disk"></i> Lưu Báo Cáo
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Lưu & Đồng Bộ Google Sheet
                         </button>
                     </div>
                 </div>
@@ -285,7 +287,7 @@
                         <h4 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
                             <i class="fa-solid fa-file-pen text-teal-700"></i> Bảng Báo Cáo Tháng Cho: <span id="entry-station-title" class="text-teal-800 font-black">TYT Xã 1</span>
                         </h4>
-                        <span class="text-[11px] text-slate-500 font-medium">* Hệ thống tự động tính toán Tồn Cuối = Tồn Đầu + Nhập - Xuất - Hao Phí</span>
+                        <span class="text-[11px] text-slate-500 font-medium">* Dữ liệu sau khi lưu sẽ tự động ghi vào Sheet trạm và Sheet Lưu Trữ Lịch Sử Tháng trên Google Sheet</span>
                     </div>
 
                     <div class="overflow-x-auto custom-scrollbar">
@@ -311,33 +313,46 @@
                 </div>
             </div>
 
+            <!-- Tab 3: Station Comparison -->
             <div id="tab-content-station-compare" class="tab-content p-4 sm:p-6 hidden">
                 <div class="mb-4">
                     <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
-                        <i class="fa-solid fa-columns text-indigo-600"></i> Bảng So Sánh Đối Chiếu Xuất - Tồn 4 Trạm Y Tế
+                        <i class="fa-solid fa-columns text-indigo-600"></i> Bảng So Sánh Đối Chiếu 4 Trạm Y Tế (Tồn Đầu - Nhập - Xuất - Tồn Cuối)
                     </h3>
-                    <p class="text-xs text-slate-500 mt-0.5">So sánh chi tiết số lượng xuất tiêm chủng và tồn kho giữa 4 trạm trong cùng kỳ báo cáo.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">So sánh chi tiết Tồn đầu, Nhập, Xuất tiêm chủng và Tồn cuối giữa 4 trạm trong cùng kỳ báo cáo.</p>
                 </div>
 
                 <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl">
                     <table class="w-full text-left text-xs">
                         <thead>
                             <tr class="bg-slate-900 text-white font-bold text-center">
-                                <th rowspan="2" class="p-3 border-r border-slate-700 text-left min-w-[200px]">Tên Vắc Xin / Vật Tư</th>
-                                <th colspan="2" class="p-2 border-r border-slate-700 bg-teal-900">TYT Xã 1</th>
-                                <th colspan="2" class="p-2 border-r border-slate-700 bg-indigo-900">TYT Xã 2</th>
-                                <th colspan="2" class="p-2 border-r border-slate-700 bg-slate-800">TYT Xã 3</th>
-                                <th colspan="2" class="p-2 bg-amber-900">TYT Xã 4</th>
+                                <th rowspan="2" class="p-3 border-r border-slate-700 text-left min-w-[200px] sticky left-0 bg-slate-900 z-10">Tên Vắc Xin / Vật Tư</th>
+                                <th colspan="4" class="p-2 border-r border-slate-700 bg-teal-900">TYT Xã 1</th>
+                                <th colspan="4" class="p-2 border-r border-slate-700 bg-indigo-900">TYT Xã 2</th>
+                                <th colspan="4" class="p-2 border-r border-slate-700 bg-slate-800">TYT Xã 3</th>
+                                <th colspan="4" class="p-2 bg-amber-900">TYT Xã 4</th>
                             </tr>
-                            <tr class="bg-slate-800 text-slate-300 font-semibold text-center border-t border-slate-700">
-                                <th class="p-2 border-r border-slate-700 w-20">Xuất</th>
-                                <th class="p-2 border-r border-slate-700 w-20 bg-teal-950 text-teal-300">Tồn</th>
-                                <th class="p-2 border-r border-slate-700 w-20">Xuất</th>
-                                <th class="p-2 border-r border-slate-700 w-20 bg-indigo-950 text-indigo-300">Tồn</th>
-                                <th class="p-2 border-r border-slate-700 w-20">Xuất</th>
-                                <th class="p-2 border-r border-slate-700 w-20 bg-slate-950 text-slate-300">Tồn</th>
-                                <th class="p-2 border-r border-slate-700 w-20">Xuất</th>
-                                <th class="p-2 w-20 bg-amber-950 text-amber-300">Tồn</th>
+                            <tr class="bg-slate-800 text-slate-300 font-semibold text-center border-t border-slate-700 text-[11px]">
+                                <!-- TYT Xã 1 -->
+                                <th class="p-2 border-r border-slate-700 min-w-[65px]">Tồn Đầu</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[65px] text-emerald-300">Nhập</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[65px] text-indigo-300">Xuất</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[70px] bg-teal-950 text-teal-300 font-bold">Tồn Cuối</th>
+                                <!-- TYT Xã 2 -->
+                                <th class="p-2 border-r border-slate-700 min-w-[65px]">Tồn Đầu</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[65px] text-emerald-300">Nhập</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[65px] text-indigo-300">Xuất</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[70px] bg-indigo-950 text-indigo-300 font-bold">Tồn Cuối</th>
+                                <!-- TYT Xã 3 -->
+                                <th class="p-2 border-r border-slate-700 min-w-[65px]">Tồn Đầu</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[65px] text-emerald-300">Nhập</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[65px] text-indigo-300">Xuất</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[70px] bg-slate-950 text-slate-200 font-bold">Tồn Cuối</th>
+                                <!-- TYT Xã 4 -->
+                                <th class="p-2 border-r border-slate-700 min-w-[65px]">Tồn Đầu</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[65px] text-emerald-300">Nhập</th>
+                                <th class="p-2 border-r border-slate-700 min-w-[65px] text-indigo-300">Xuất</th>
+                                <th class="p-2 min-w-[70px] bg-amber-950 text-amber-300 font-bold">Tồn Cuối</th>
                             </tr>
                         </thead>
                         <tbody id="station-compare-table-body" class="divide-y divide-slate-200 bg-white">
@@ -347,177 +362,144 @@
                 </div>
             </div>
 
+            <!-- Tab 4: Detailed Google Sheet Storage Structure Guide -->
             <div id="tab-content-setup-guide" class="tab-content p-4 sm:p-6 hidden">
-                <div class="mb-6 bg-gradient-to-r from-amber-500/10 via-amber-50 to-teal-50 border border-amber-200 rounded-2xl p-5 shadow-sm">
+                <div class="mb-6 bg-gradient-to-r from-teal-900 via-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-md border border-teal-800">
                     <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-amber-500 text-white rounded-xl flex items-center justify-center text-2xl font-bold shrink-0 shadow-md">
-                            <i class="fa-solid fa-rocket"></i>
+                        <div class="w-12 h-12 bg-teal-500/20 text-teal-300 border border-teal-400/30 rounded-xl flex items-center justify-center text-2xl font-bold shrink-0 shadow-inner">
+                            <i class="fa-solid fa-map-location-dot"></i>
                         </div>
                         <div>
-                            <h3 class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                                HƯỚNG DẪN TẠO CÁC SHEET LƯU TRỮ TRÊN GOOGLE SHEETS
+                            <h3 class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+                                BÁO CÁO TỪNG THÁNG SẼ ĐƯỢC LƯU Ở ĐÂU TRÊN GOOGLE SHEETS?
                             </h3>
-                            <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                                Để hệ thống hoạt động trơn tru cho 4 Trạm Y tế nhập liệu riêng biệt và tự động tổng hợp, bạn có thể chọn <strong>Khởi Tạo Tự Động bằng Script (Khuyên dùng - 1 Click)</strong> hoặc <strong>Tự Tạo Thủ Công</strong> theo cấu trúc chuẩn bên dưới.
+                            <p class="text-xs sm:text-sm text-teal-200/90 mt-1 leading-relaxed">
+                                Dữ liệu báo cáo của từng Trạm Y Tế khi bấm <strong>"Lưu Báo Cáo"</strong> sẽ tự động lưu vào <strong>3 VỊ TRÍ CHÍNH</strong> trên file Google Sheet của bạn.
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Method 1 -->
-                <div class="bg-white border-2 border-emerald-500/30 rounded-2xl p-5 shadow-sm mb-8 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wide">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Cách Nhanh Nhất (Khuyên Dùng)
+                <!-- 3 Storage Locations Visual Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    
+                    <!-- Location 1 -->
+                    <div class="bg-white border-2 border-indigo-200 rounded-2xl p-4 shadow-sm hover:border-indigo-400 transition-all">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-800 font-black text-xs flex items-center justify-center">1</span>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Sheet Riêng Từng Trạm</h4>
+                                <span class="font-mono text-[10px] text-indigo-600 font-semibold">TYT_Xa_1 | TYT_Xa_2...</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                            Mỗi Trạm Y Tế có 1 Sheet tương ứng. Khi trạm báo cáo số liệu mới, bảng này sẽ ngay lập tức được ghi nhận và tính toán số dư tồn cuối tháng hiện tại.
+                        </p>
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-[11px] text-slate-700 font-mono">
+                            📌 <strong>Nội dung:</strong> STT, Mã Số, Tên Vắc Xin, ĐVT, Tồn Đầu, Nhập, Xuất, Hao Phí, Tồn Cuối, Ghi Chú.
+                        </div>
                     </div>
 
-                    <h4 class="text-sm sm:text-base font-bold text-emerald-950 flex items-center gap-2 mb-3">
-                        <span class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-black">1</span>
-                        CÁCH 1: TỰ ĐỘNG NẠP CẤU TRÚC BẰNG GOOGLE APPS SCRIPT (Chỉ mất 30 giây)
-                    </h4>
+                    <!-- Location 2 -->
+                    <div class="bg-white border-2 border-emerald-200 rounded-2xl p-4 shadow-sm hover:border-emerald-400 transition-all">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center">2</span>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Sheet Lưu Trữ Lịch Sử</h4>
+                                <span class="font-mono text-[10px] text-emerald-600 font-semibold">Luu_Tru_Bao_Cao_Cac_Thang</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                            <strong>Nơi lưu nhật ký hàng tháng:</strong> Mỗi lần bấm "Lưu Báo Cáo", một bản sao số liệu tháng đó sẽ được lưu lại vĩnh viễn kèm cột <strong>Kỳ Báo Cáo (Tháng/Năm)</strong>.
+                        </p>
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-[11px] text-slate-700 font-mono">
+                            📌 <strong>Ưu điểm:</strong> Không lo mất số liệu tháng cũ, dễ dàng tra cứu lịch sử báo cáo các tháng trước.
+                        </div>
+                    </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 my-4">
-                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                            <span class="text-xs font-bold text-teal-700 block mb-1">Bước 1: Mở File Mới</span>
-                            <p class="text-xs text-slate-600">Truy cập <a href="https://sheets.new" target="_blank" class="text-teal-600 font-bold underline">sheets.new</a> để tạo 1 file Google Sheets mới.</p>
+                    <!-- Location 3 -->
+                    <div class="bg-white border-2 border-teal-200 rounded-2xl p-4 shadow-sm hover:border-teal-400 transition-all">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 font-black text-xs flex items-center justify-center">3</span>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Sheet Tổng Hợp Huyện</h4>
+                                <span class="font-mono text-[10px] text-teal-600 font-semibold">00_TONG_HOP_4_TRAM</span>
+                            </div>
                         </div>
-                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                            <span class="text-xs font-bold text-teal-700 block mb-1">Bước 2: Mở Apps Script</span>
-                            <p class="text-xs text-slate-600">Trên Google Sheets, vào <strong>Tiện ích mở rộng (Extensions)</strong> &gt; <strong>Apps Script</strong>.</p>
-                        </div>
-                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                            <span class="text-xs font-bold text-teal-700 block mb-1">Bước 3: Dán Code</span>
-                            <p class="text-xs text-slate-600">Xóa hết code cũ, Dán toàn bộ mã ở tab <strong><i class="fa-solid fa-code text-emerald-600"></i> Code Apps Script</strong> rồi nhấn <strong>Lưu (Ctrl + S)</strong>.</p>
-                        </div>
-                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                            <span class="text-xs font-bold text-teal-700 block mb-1">Bước 4: Chạy Khởi Tạo</span>
-                            <p class="text-xs text-slate-600">Quay lại Google Sheet, F5 tải lại trang -&gt; Chọn Menu <strong>⚡ QUẢN LÝ BÁO CÁO 4 TRẠM</strong> &gt; Click <strong>🚀 1. Khởi Tạo Cấu Trúc Bảng Chuẩn 4 Trạm</strong>.</p>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                            Hệ thống tự động cộng dồn số liệu của cả 4 trạm y tế lại thành 1 bảng tổng hợp chung toàn huyện để Trung tâm Y tế dễ dàng báo cáo cấp trên.
+                        </p>
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-[11px] text-slate-700 font-mono">
+                            📌 <strong>Nội dung:</strong> Tổng tồn kho, tổng nhập, tổng xuất tiêm chủng toàn huyện.
                         </div>
                     </div>
                 </div>
 
-                <!-- Method 2 -->
-                <div class="space-y-6">
-                    <h4 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
-                        <span class="w-7 h-7 rounded-full bg-slate-200 text-slate-800 flex items-center justify-center text-xs font-black">2</span>
-                        CÁCH 2: TỰ TẠO THỦ CÔNG CÁC SHEET (Nếu muốn tự làm bằng tay)
+                <!-- Complete 6 Sheet Diagram Table -->
+                <div class="bg-slate-50 border border-slate-300 rounded-2xl p-5 shadow-sm">
+                    <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-teal-700"></i> CHI TIẾT DANH SÁCH 6 SHEET ĐƯỢC TẠO TỰ ĐỘNG TRÊN GOOGLE SHEETS
                     </h4>
-                    <p class="text-xs text-slate-500">Bạn cần tạo đúng <strong>6 Trang tính (Sheets)</strong> trong file Google Sheets với các tên và tiêu đề cột như sau:</p>
-
-                    <!-- Sheet 1 -->
-                    <div class="bg-slate-50 border border-slate-300 rounded-xl p-4 shadow-sm">
-                        <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="bg-teal-700 text-white text-xs font-bold px-2.5 py-1 rounded">Sheet 1</span>
-                                <h5 class="font-mono font-bold text-teal-900 text-sm">00_TONG_HOP_4_TRAM</h5>
-                            </div>
-                            <span class="text-[11px] bg-teal-100 text-teal-800 font-semibold px-2 py-0.5 rounded">Dành cho Trung Tâm Y Tế xem tổng hợp</span>
-                        </div>
-                        <p class="text-xs text-slate-600 mb-2">Tạo các cột tiêu đề ở Hàng 1 (Từ Cột A đến Cột I):</p>
-                        <div class="overflow-x-auto custom-scrollbar">
-                            <table class="w-full text-left text-xs border border-slate-300 bg-white">
-                                <thead>
-                                    <tr class="bg-teal-900 text-white font-bold text-center">
-                                        <th class="p-2 border">Cột A (1)</th>
-                                        <th class="p-2 border">Cột B (2)</th>
-                                        <th class="p-2 border">Cột C (3)</th>
-                                        <th class="p-2 border">Cột D (4)</th>
-                                        <th class="p-2 border">Cột E (5)</th>
-                                        <th class="p-2 border">Cột F (6)</th>
-                                        <th class="p-2 border">Cột G (7)</th>
-                                        <th class="p-2 border">Cột H (8)</th>
-                                        <th class="p-2 border">Cột I (9)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="font-medium text-slate-800 text-center">
-                                        <td class="p-2 border bg-slate-100 font-bold">STT</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Mã Vắc Xin/Vật Tư</td>
-                                        <td class="p-2 border bg-slate-100 font-bold text-left">Tên Vắc Xin &amp; Vật Tư Y Tế</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">ĐVT</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Tồn Đầu Tháng</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Nhập Trong Tháng</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Xuất Tiêm Chủng</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Hao Phí / Hủy</td>
-                                        <td class="p-2 border bg-slate-100 font-bold text-teal-700">Tồn Cuối Tháng</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Sheet 2-5 -->
-                    <div class="bg-slate-50 border border-slate-300 rounded-xl p-4 shadow-sm">
-                        <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="bg-indigo-700 text-white text-xs font-bold px-2.5 py-1 rounded">Sheet 2, 3, 4, 5</span>
-                                <h5 class="font-mono font-bold text-indigo-950 text-sm">TYT_Xa_1 | TYT_Xa_2 | TYT_Xa_3 | TYT_Xa_4</h5>
-                            </div>
-                            <span class="text-[11px] bg-indigo-100 text-indigo-800 font-semibold px-2 py-0.5 rounded">Tạo 4 Sheets tương ứng cho 4 Trạm Y tế nhập liệu</span>
-                        </div>
-                        <p class="text-xs text-slate-600 mb-2">Tạo các cột tiêu đề ở Hàng 1 (Từ Cột A đến Cột J):</p>
-                        <div class="overflow-x-auto custom-scrollbar">
-                            <table class="w-full text-left text-xs border border-slate-300 bg-white">
-                                <thead>
-                                    <tr class="bg-slate-800 text-white font-bold text-center">
-                                        <th class="p-2 border">A</th>
-                                        <th class="p-2 border">B</th>
-                                        <th class="p-2 border">C</th>
-                                        <th class="p-2 border">D</th>
-                                        <th class="p-2 border">E</th>
-                                        <th class="p-2 border">F</th>
-                                        <th class="p-2 border">G</th>
-                                        <th class="p-2 border">H</th>
-                                        <th class="p-2 border">I (Công thức)</th>
-                                        <th class="p-2 border">J</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="font-medium text-slate-800 text-center">
-                                        <td class="p-2 border bg-slate-100 font-bold">STT</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Mã Số</td>
-                                        <td class="p-2 border bg-slate-100 font-bold text-left">Tên Vắc Xin / Vật Tư</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">ĐVT</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Tồn Đầu Tháng</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Nhập Trong Tháng</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Xuất Tiêm Chủng</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Hao Phí / Hủy</td>
-                                        <td class="p-2 border bg-emerald-100 font-extrabold text-emerald-800">Tồn Cuối Tháng</td>
-                                        <td class="p-2 border bg-slate-100 font-bold">Ghi Chú Số Lô</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Sheet 6 -->
-                    <div class="bg-slate-50 border border-slate-300 rounded-xl p-4 shadow-sm">
-                        <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="bg-amber-600 text-white text-xs font-bold px-2.5 py-1 rounded">Sheet 6</span>
-                                <h5 class="font-mono font-bold text-amber-950 text-sm">Cau_Hinh_Mat_Khau</h5>
-                            </div>
-                            <span class="text-[11px] bg-amber-100 text-amber-900 font-semibold px-2 py-0.5 rounded">Lưu trữ mật khẩu xác thực cho 4 Trạm</span>
-                        </div>
-                        <div class="overflow-x-auto custom-scrollbar max-w-md">
-                            <table class="w-full text-left text-xs border border-slate-300 bg-white">
-                                <thead>
-                                    <tr class="bg-amber-900 text-white font-bold text-center">
-                                        <th class="p-2 border">Cột A (Trạm Y Tế)</th>
-                                        <th class="p-2 border">Cột B (Mật Khẩu Phân Quyền)</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="font-mono text-xs">
-                                    <tr><td class="p-2 border font-bold text-slate-800">TYT_Xa_1</td><td class="p-2 border text-emerald-700 font-bold">123456</td></tr>
-                                    <tr><td class="p-2 border font-bold text-slate-800">TYT_Xa_2</td><td class="p-2 border text-emerald-700 font-bold">123456</td></tr>
-                                    <tr><td class="p-2 border font-bold text-slate-800">TYT_Xa_3</td><td class="p-2 border text-emerald-700 font-bold">123456</td></tr>
-                                    <tr><td class="p-2 border font-bold text-slate-800">TYT_Xa_4</td><td class="p-2 border text-emerald-700 font-bold">123456</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left text-xs border border-slate-300 bg-white">
+                            <thead>
+                                <tr class="bg-slate-800 text-white font-bold text-center">
+                                    <th class="p-2.5 border">Tên Sheet (Tab Name)</th>
+                                    <th class="p-2.5 border">Mục Đích Sử Dụng</th>
+                                    <th class="p-2.5 border">Ai Sử Dụng / Nhập Liệu</th>
+                                    <th class="p-2.5 border">Cơ Chế Cập Nhật Dữ Liệu</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200">
+                                <tr>
+                                    <td class="p-2.5 border font-mono font-bold text-teal-800 bg-teal-50">00_TONG_HOP_4_TRAM</td>
+                                    <td class="p-2.5 border font-medium">Tổng hợp XNT toàn huyện của 4 Trạm</td>
+                                    <td class="p-2.5 border font-semibold text-slate-700">Lãnh đạo TTYT / Chuyên viên</td>
+                                    <td class="p-2.5 border text-slate-600">Tự động cộng từ 4 trạm bằng Script</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 border font-mono font-bold text-indigo-800">TYT_Xa_1</td>
+                                    <td class="p-2.5 border">Báo cáo XNT tháng hiện tại của Trạm Y tế Xã 1</td>
+                                    <td class="p-2.5 border font-semibold text-indigo-700">Cán bộ Trạm Y tế Xã 1</td>
+                                    <td class="p-2.5 border text-slate-600">Tự động lưu từ WebApp khi bấm Lưu</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 border font-mono font-bold text-indigo-800">TYT_Xa_2</td>
+                                    <td class="p-2.5 border">Báo cáo XNT tháng hiện tại của Trạm Y tế Xã 2</td>
+                                    <td class="p-2.5 border font-semibold text-indigo-700">Cán bộ Trạm Y tế Xã 2</td>
+                                    <td class="p-2.5 border text-slate-600">Tự động lưu từ WebApp khi bấm Lưu</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 border font-mono font-bold text-indigo-800">TYT_Xa_3</td>
+                                    <td class="p-2.5 border">Báo cáo XNT tháng hiện tại của Trạm Y tế Xã 3</td>
+                                    <td class="p-2.5 border font-semibold text-indigo-700">Cán bộ Trạm Y tế Xã 3</td>
+                                    <td class="p-2.5 border text-slate-600">Tự động lưu từ WebApp khi bấm Lưu</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 border font-mono font-bold text-indigo-800">TYT_Xa_4</td>
+                                    <td class="p-2.5 border">Báo cáo XNT tháng hiện tại của Trạm Y tế Xã 4</td>
+                                    <td class="p-2.5 border font-semibold text-indigo-700">Cán bộ Trạm Y tế Xã 4</td>
+                                    <td class="p-2.5 border text-slate-600">Tự động lưu từ WebApp khi bấm Lưu</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 border font-mono font-bold text-emerald-800 bg-emerald-50">Luu_Tru_Bao_Cao_Cac_Thang</td>
+                                    <td class="p-2.5 border font-medium">Lưu trữ kho dữ liệu lịch sử từng tháng (Tháng 1, 2...8, 9)</td>
+                                    <td class="p-2.5 border font-semibold text-emerald-700">Tự động lưu nhật ký vĩnh viễn</td>
+                                    <td class="p-2.5 border text-slate-600">Tự động ghi nối tiếp mỗi kỳ báo cáo</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 border font-mono font-bold text-amber-800 bg-amber-50">Cau_Hinh_Mat_Khau</td>
+                                    <td class="p-2.5 border font-medium">Quản lý danh sách mật khẩu xác thực của 4 Trạm</td>
+                                    <td class="p-2.5 border font-semibold text-amber-800">Quản trị viên hệ thống</td>
+                                    <td class="p-2.5 border text-slate-600">Sửa trực tiếp cột Mật Khẩu trên Sheet</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
+            <!-- Tab 5: Apps Script Source Code -->
             <div id="tab-content-gas-script" class="tab-content p-4 sm:p-6 hidden">
                 <div class="mb-4 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
@@ -525,7 +507,7 @@
                             <i class="fa-solid fa-code text-emerald-600"></i> Mã Google Apps Script Cho Google Sheets
                         </h3>
                         <p class="text-emerald-800 text-xs mt-1">
-                            Copy mã bên dưới dán vào <strong>Tiện ích mở rộng (Extensions) &gt; Apps Script</strong> trên Google Sheets của bạn để tự động hóa tạo popup nhập mật khẩu, chia quyền 4 trạm và tổng hợp XNT tự động!
+                            Copy mã bên dưới dán vào <strong>Tiện ích mở rộng (Extensions) &gt; Apps Script</strong> trên Google Sheets của bạn để tự động hóa tạo popup nhập mật khẩu, lưu nhật ký hàng tháng và tổng hợp tự động!
                         </p>
                     </div>
                     <button onclick="copyGasCode()" id="btn-copy-gas" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow-md flex items-center gap-2 whitespace-nowrap transition-all">
@@ -544,6 +526,7 @@
         </div>
     </main>
 
+    <!-- Modal Login Dialog -->
     <div id="modal-station-auth" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100">
             <div class="bg-gradient-to-r from-teal-800 to-slate-900 p-4 text-white flex items-center justify-between">
@@ -587,6 +570,7 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
     <div id="toast-notify" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 border border-slate-700">
         <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
         <span id="toast-msg" class="text-xs sm:text-sm font-medium">Cập nhật thành công!</span>
@@ -1113,7 +1097,7 @@
             }
         }
 
-        function saveCurrentStationData() {
+        async function saveCurrentStationData() {
             if (!authenticatedStation) {
                 showToast("Bạn chưa đăng nhập mật khẩu trạm!", "error");
                 return;
@@ -1121,6 +1105,8 @@
 
             const periodEl = document.getElementById('select-month-period');
             const period = periodEl ? periodEl.value : '2026-08';
+
+            const itemsToSave = [];
 
             MASTER_ITEMS.forEach(item => {
                 const opEl = document.getElementById(`input-opening-${item.id}`);
@@ -1139,11 +1125,54 @@
                 if (!monthlyDatabase[period][authenticatedStation]) monthlyDatabase[period][authenticatedStation] = {};
 
                 monthlyDatabase[period][authenticatedStation][item.id] = { opening, imported, used, waste, note };
+
+                itemsToSave.push({
+                    code: item.id,
+                    name: item.name,
+                    unit: item.unit,
+                    opening: opening,
+                    imported: imported,
+                    used: used,
+                    waste: waste,
+                    closing: opening + imported - used - waste,
+                    note: note
+                });
             });
 
             renderSummaryTable();
             renderCompareTable();
-            showToast(`Đã lưu báo cáo tháng thành công cho ${authenticatedStation}!`);
+            showToast(`Đã cập nhật số liệu cho ${authenticatedStation}!`);
+
+            // TỰ ĐỘNG GỬI SỐ LIỆU ĐẾN GOOGLE SHEETS QUA WEB APP API
+            const webAppUrl = window.CONFIG?.WEB_APP_URL || "";
+            if (webAppUrl) {
+                try {
+                    updateSheetStatusBadge("loading", "Đang tự động lưu số liệu vào Google Sheets...");
+                    
+                    const payload = {
+                        action: "saveStationData",
+                        station: authenticatedStation,
+                        period: period,
+                        items: itemsToSave
+                    };
+
+                    await fetch(webAppUrl, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+
+                    updateSheetStatusBadge(true, `Đã lưu & đồng bộ Google Sheets thành công!`);
+                    showToast(`✅ Đã tự động lưu vào Google Sheet & Nhật ký lưu trữ tháng!`);
+                } catch (err) {
+                    console.error("Lỗi khi đồng bộ Google Sheets:", err);
+                    updateSheetStatusBadge("warning", "Chưa thể gửi dữ liệu lên Web App Google Sheet");
+                    showToast("⚠️ Lưu nội bộ thành công nhưng chưa thể lưu lên Google Sheets!", "error");
+                }
+            } else {
+                showToast(`💡 Để lưu tự động trực tiếp vào Google Sheets, hãy dán WEB_APP_URL trong file index.html!`, "warning");
+            }
         }
 
         function renderCompareTable() {
@@ -1155,10 +1184,10 @@
             let rowsHtml = '';
 
             MASTER_ITEMS.forEach(item => {
-                let st1 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 1"] && monthlyDatabase[period]["TYT Xã 1"][item.id]) || { used: 0, opening:0, imported:0, waste:0 };
-                let st2 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 2"] && monthlyDatabase[period]["TYT Xã 2"][item.id]) || { used: 0, opening:0, imported:0, waste:0 };
-                let st3 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 3"] && monthlyDatabase[period]["TYT Xã 3"][item.id]) || { used: 0, opening:0, imported:0, waste:0 };
-                let st4 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 4"] && monthlyDatabase[period]["TYT Xã 4"][item.id]) || { used: 0, opening:0, imported:0, waste:0 };
+                let st1 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 1"] && monthlyDatabase[period]["TYT Xã 1"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
+                let st2 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 2"] && monthlyDatabase[period]["TYT Xã 2"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
+                let st3 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 3"] && monthlyDatabase[period]["TYT Xã 3"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
+                let st4 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 4"] && monthlyDatabase[period]["TYT Xã 4"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
 
                 let c1 = st1.opening + st1.imported - st1.used - st1.waste;
                 let c2 = st2.opening + st2.imported - st2.used - st2.waste;
@@ -1167,21 +1196,33 @@
 
                 rowsHtml += `
                     <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="p-2.5 font-bold text-slate-800">
+                        <td class="p-2.5 font-bold text-slate-800 bg-white sticky left-0 z-10 border-r border-slate-200 shadow-sm">
                             ${item.name}
                             <span class="block text-[10px] text-slate-400 font-mono">${item.id} (${item.unit})</span>
                         </td>
-                        <td class="p-2 text-right font-mono font-medium text-slate-700 border-l border-slate-200">${st1.used.toLocaleString()}</td>
-                        <td class="p-2 text-right font-mono font-bold text-emerald-800 bg-emerald-50/40">${c1.toLocaleString()}</td>
+                        <!-- TYT Xã 1 -->
+                        <td class="p-2 text-right font-mono text-slate-700 border-l border-slate-200">${st1.opening.toLocaleString()}</td>
+                        <td class="p-2 text-right font-mono font-semibold text-emerald-700 bg-emerald-50/30">${st1.imported > 0 ? '+' + st1.imported.toLocaleString() : '0'}</td>
+                        <td class="p-2 text-right font-mono font-semibold text-indigo-700 bg-indigo-50/30">${st1.used > 0 ? '-' + st1.used.toLocaleString() : '0'}</td>
+                        <td class="p-2 text-right font-mono font-black text-teal-900 bg-teal-100/60">${c1.toLocaleString()}</td>
 
-                        <td class="p-2 text-right font-mono font-medium text-slate-700 border-l border-slate-200">${st2.used.toLocaleString()}</td>
-                        <td class="p-2 text-right font-mono font-bold text-emerald-800 bg-emerald-50/40">${c2.toLocaleString()}</td>
+                        <!-- TYT Xã 2 -->
+                        <td class="p-2 text-right font-mono text-slate-700 border-l border-slate-200">${st2.opening.toLocaleString()}</td>
+                        <td class="p-2 text-right font-mono font-semibold text-emerald-700 bg-emerald-50/30">${st2.imported > 0 ? '+' + st2.imported.toLocaleString() : '0'}</td>
+                        <td class="p-2 text-right font-mono font-semibold text-indigo-700 bg-indigo-50/30">${st2.used > 0 ? '-' + st2.used.toLocaleString() : '0'}</td>
+                        <td class="p-2 text-right font-mono font-black text-indigo-900 bg-indigo-100/60">${c2.toLocaleString()}</td>
 
-                        <td class="p-2 text-right font-mono font-medium text-slate-700 border-l border-slate-200">${st3.used.toLocaleString()}</td>
-                        <td class="p-2 text-right font-mono font-bold text-emerald-800 bg-emerald-50/40">${c3.toLocaleString()}</td>
+                        <!-- TYT Xã 3 -->
+                        <td class="p-2 text-right font-mono text-slate-700 border-l border-slate-200">${st3.opening.toLocaleString()}</td>
+                        <td class="p-2 text-right font-mono font-semibold text-emerald-700 bg-emerald-50/30">${st3.imported > 0 ? '+' + st3.imported.toLocaleString() : '0'}</td>
+                        <td class="p-2 text-right font-mono font-semibold text-indigo-700 bg-indigo-50/30">${st3.used > 0 ? '-' + st3.used.toLocaleString() : '0'}</td>
+                        <td class="p-2 text-right font-mono font-black text-slate-900 bg-slate-200/70">${c3.toLocaleString()}</td>
 
-                        <td class="p-2 text-right font-mono font-medium text-slate-700 border-l border-slate-200">${st4.used.toLocaleString()}</td>
-                        <td class="p-2 text-right font-mono font-bold text-emerald-800 bg-emerald-50/40">${c4.toLocaleString()}</td>
+                        <!-- TYT Xã 4 -->
+                        <td class="p-2 text-right font-mono text-slate-700 border-l border-slate-200">${st4.opening.toLocaleString()}</td>
+                        <td class="p-2 text-right font-mono font-semibold text-emerald-700 bg-emerald-50/30">${st4.imported > 0 ? '+' + st4.imported.toLocaleString() : '0'}</td>
+                        <td class="p-2 text-right font-mono font-semibold text-indigo-700 bg-indigo-50/30">${st4.used > 0 ? '-' + st4.used.toLocaleString() : '0'}</td>
+                        <td class="p-2 text-right font-mono font-black text-amber-900 bg-amber-100/60">${c4.toLocaleString()}</td>
                     </tr>
                 `;
             });
@@ -1242,7 +1283,7 @@
             const gasCode = `/**
  * ==============================================================================
  * HỆ THỐNG TỔNG HỢP XUẤT NHẬP TỒN VẮC XIN & VẬT TƯ CHO 4 TRẠM Y TẾ
- * Tích hợp tự động đồng bộ API cho Website & Popup mật khẩu trên Google Sheets
+ * Tích hợp lưu tự động theo từng Trạm, theo Lịch sử từng Tháng & Bảng Tổng Hợp
  * ==============================================================================
  */
 
@@ -1250,7 +1291,7 @@
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('⚡ QUẢN LÝ BÁO CÁO 4 TRẠM')
-    .addItem('🚀 1. Khởi Tạo Cấu Trúc Bảng Chuẩn 4 Trạm', 'init4StationSpreadsheet')
+    .addItem('🚀 1. Khởi Tạo Đủ 6 Sheet Chuẩn Hệ Thống', 'init4StationSpreadsheet')
     .addSeparator()
     .addItem('🔑 2. Mở Popup Nhập Liệu Trạm (Yêu Cầu Mật Khẩu)', 'openStationLoginDialog')
     .addItem('📊 3. Tính Bảng Tổng Hợp 4 Trạm Hàng Tháng', 'consolidateMonthlyReport')
@@ -1259,7 +1300,7 @@ function onOpen() {
     .addToUi();
 }
 
-// 2. API ENDPOINT CHO WEBSITE TỰ ĐỘNG ĐỌC DỮ LIỆU CÁC TRẠM
+// 2. API ENDPOINT ĐỌC DỮ LIỆU TỰ ĐỘNG CHO WEBSITE (HTTP GET)
 function doGet(e) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const stations = ['TYT_Xa_1', 'TYT_Xa_2', 'TYT_Xa_3', 'TYT_Xa_4'];
@@ -1288,10 +1329,87 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// 3. TỰ ĐỘNG CẤU TRÚC SHEETS CHO TỔNG HỢP & 4 TRẠM
+// 3. API ENDPOINT TỰ ĐỘNG LƯU BÁO CÁO VÀO 3 VỊ TRÍ GOOGLE SHEETS (HTTP POST)
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    if (data.action === "saveStationData") {
+      const station = data.station;
+      const period = data.period || "Chưa phân kỳ";
+      const items = data.items || [];
+      
+      const sheetNameMap = {
+        "TYT Xã 1": "TYT_Xa_1",
+        "TYT Xã 2": "TYT_Xa_2",
+        "TYT Xã 3": "TYT_Xa_3",
+        "TYT Xã 4": "TYT_Xa_4"
+      };
+      
+      const tabName = sheetNameMap[station] || station.replace(/ /g, "_");
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      let sheet = ss.getSheetByName(tabName);
+      
+      if (!sheet) {
+        return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Tab trạm không tồn tại" }))
+                             .setMimeType(ContentService.MimeType.JSON);
+      }
+      
+      // VỊ TRÍ 1: Ghi dữ liệu vào Sheet riêng của Trạm
+      items.forEach((item, index) => {
+        const rowIndex = index + 2;
+        sheet.getRange(rowIndex, 1, 1, 10).setValues([[
+          index + 1,
+          item.code,
+          item.name,
+          item.unit,
+          item.opening,
+          item.imported,
+          item.used,
+          item.waste,
+          \`=E\${rowIndex}+F\${rowIndex}-G\${rowIndex}-H\${rowIndex}\`,
+          item.note || ""
+        ]]);
+      });
+
+      // VỊ TRÍ 2: Lưu nhật ký vĩnh viễn vào Sheet Luu_Tru_Bao_Cao_Cac_Thang
+      let logSheet = ss.getSheetByName('Luu_Tru_Bao_Cao_Cac_Thang');
+      if (logSheet) {
+        const timestamp = new Date().toLocaleString('vi-VN');
+        items.forEach((item, index) => {
+          logSheet.appendRow([
+            period,
+            station,
+            index + 1,
+            item.code,
+            item.name,
+            item.unit,
+            item.opening,
+            item.imported,
+            item.used,
+            item.waste,
+            item.closing,
+            item.note || "",
+            timestamp
+          ]);
+        });
+      }
+      
+      // VỊ TRÍ 3: Tự động tính toán lại Sheet Báo Cáo Tổng Hợp 00_TONG_HOP_4_TRAM
+      consolidateMonthlyReport();
+      
+      return ContentService.createTextOutput(JSON.stringify({ status: "success", message: "Ghi dữ liệu thành công vào 3 vị trí!" }))
+                           .setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
+                         .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// 4. TỰ ĐỘNG KHỞI TẠO CẤU TRÚC 6 SHEETS CHUẨN
 function init4StationSpreadsheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const stationSheets = ['00_TONG_HOP_4_TRAM', 'TYT_Xa_1', 'TYT_Xa_2', 'TYT_Xa_3', 'TYT_Xa_4', 'Cau_Hinh_Mat_Khau'];
+  const stationSheets = ['00_TONG_HOP_4_TRAM', 'TYT_Xa_1', 'TYT_Xa_2', 'TYT_Xa_3', 'TYT_Xa_4', 'Luu_Tru_Bao_Cao_Cac_Thang', 'Cau_Hinh_Mat_Khau'];
   const headers = ['STT', 'Mã Vắc Xin/Vật Tư', 'Tên Vắc Xin & Vật Tư Y Tế', 'ĐVT', 'Tồn Đầu Tháng', 'Nhập Trong Tháng', 'Xuất Tiêm Chủng', 'Hao Phí / Hủy', 'Tồn Cuối Tháng', 'Ghi Chú Số Lô'];
 
   stationSheets.forEach(sheetName => {
@@ -1300,7 +1418,7 @@ function init4StationSpreadsheet() {
       sheet = ss.insertSheet(sheetName);
     }
     
-    if (sheetName !== 'Cau_Hinh_Mat_Khau') {
+    if (sheetName !== 'Cau_Hinh_Mat_Khau' && sheetName !== 'Luu_Tru_Bao_Cao_Cac_Thang') {
       sheet.getRange(1, 1, 1, headers.length).setValues([headers])
            .setBackground(sheetName === '00_TONG_HOP_4_TRAM' ? '#0f766e' : '#1e293b')
            .setFontColor('#FFFFFF')
@@ -1309,6 +1427,15 @@ function init4StationSpreadsheet() {
       sheet.setFrozenRows(1);
     }
   });
+
+  // Khởi tạo tiêu đề cho Sheet Lịch Sử Lưu Trữ Các Tháng
+  const logSheet = ss.getSheetByName('Luu_Tru_Bao_Cao_Cac_Thang');
+  if (logSheet.getLastRow() === 0) {
+    const logHeaders = ['Kỳ Báo Cáo', 'Trạm Y Tế', 'STT', 'Mã Số', 'Tên Vắc Xin / Vật Tư', 'ĐVT', 'Tồn Đầu', 'Nhập', 'Xuất Tiêm', 'Hao Phí', 'Tồn Cuối', 'Ghi Chú', 'Thời Gian Cập Nhật'];
+    logSheet.getRange(1, 1, 1, logHeaders.length).setValues([logHeaders])
+            .setBackground('#047857').setFontColor('#FFFFFF').setFontWeight('bold');
+    logSheet.setFrozenRows(1);
+  }
 
   // Mật khẩu mặc định
   const pwSheet = ss.getSheetByName('Cau_Hinh_Mat_Khau');
@@ -1322,64 +1449,10 @@ function init4StationSpreadsheet() {
     ]);
   }
 
-  SpreadsheetApp.getUi().alert('✅ Đã khởi tạo cấu trúc Báo cáo XNT 4 Trạm Y Tế thành công!');
+  SpreadsheetApp.getUi().alert('✅ Đã khởi tạo cấu trúc Báo cáo XNT 6 Sheets thành công!');
 }
 
-// 2. TỰ ĐỘNG CẤU TRÚC SHEETS CHO TỔNG HỢP & 4 TRẠM
-function init4StationSpreadsheet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  
-  const stationSheets = ['00_TONG_HOP_4_TRAM', 'TYT_Xa_1', 'TYT_Xa_2', 'TYT_Xa_3', 'TYT_Xa_4', 'Cau_Hinh_Mat_Khau'];
-  const headers = ['STT', 'Mã Vắc Xin/Vật Tư', 'Tên Vắc Xin & Vật Tư Y Tế', 'ĐVT', 'Tồn Đầu Tháng', 'Nhập Trong Tháng', 'Xuất Tiêm Chủng', 'Hao Phí / Hủy', 'Tồn Cuối Tháng', 'Ghi Chú Số Lô'];
-
-  stationSheets.forEach(sheetName => {
-    let sheet = ss.getSheetByName(sheetName);
-    if (!sheet) {
-      sheet = ss.insertSheet(sheetName);
-    }
-    
-    if (sheetName !== 'Cau_Hinh_Mat_Khau') {
-      sheet.getRange(1, 1, 1, headers.length).setValues([headers])
-           .setBackground(sheetName === '00_TONG_HOP_4_TRAM' ? '#0f766e' : '#1e293b')
-           .setFontColor('#FFFFFF')
-           .setFontWeight('bold')
-           .setHorizontalAlignment('center');
-      sheet.setFrozenRows(1);
-    }
-  });
-
-  // Tạo mật khẩu mặc định
-  const pwSheet = ss.getSheetByName('Cau_Hinh_Mat_Khau');
-  if (pwSheet.getLastRow() <= 1) {
-    pwSheet.getRange(1, 1, 1, 2).setValues([['Trạm Y Tế', 'Mật Khẩu']]).setFontWeight('bold');
-    pwSheet.getRange(2, 1, 4, 2).setValues([
-      ['TYT_Xa_1', '123456'],
-      ['TYT_Xa_2', '123456'],
-      ['TYT_Xa_3', '123456'],
-      ['TYT_Xa_4', '123456']
-    ]);
-  }
-
-  // Khởi tạo danh mục vắc xin mẫu
-  const sampleItems = [
-    [1, 'VX-01', 'Vắc xin Lao (BCG)', 'Liều', 100, 50, 40, 0, '=E2+F2-G2-H2', 'Lô 2026A'],
-    [2, 'VX-02', 'Vắc xin Viêm gan B sơ sinh (HepB)', 'Liều', 100, 100, 80, 0, '=E3+F3-G3-H3', 'Lô 2026B'],
-    [3, 'VX-03', 'Vắc xin 5 trong 1 (DPT-VGB-Hib)', 'Liều', 200, 100, 120, 2, '=E4+F4-G4-H4', 'Lô 2026C'],
-    [4, 'VX-04', 'Vắc xin Bại liệt uống (OPV)', 'Liều', 300, 0, 150, 0, '=E5+F5-G5-H5', 'Lô 2026D'],
-    [5, 'VT-01', 'Bơm kim tiêm 0.5ml (tự khóa)', 'Cái', 1000, 500, 600, 0, '=E6+F6-G6-H6', 'Lô VT99']
-  ];
-
-  ['TYT_Xa_1', 'TYT_Xa_2', 'TYT_Xa_3', 'TYT_Xa_4'].forEach(st => {
-    const s = ss.getSheetByName(st);
-    if (s.getLastRow() <= 1) {
-      s.getRange(2, 1, sampleItems.length, 10).setValues(sampleItems);
-    }
-  });
-
-  SpreadsheetApp.getUi().alert('✅ Đã tạo xong cấu trúc 4 Trạm Y Tế và Bảng Tổng Hợp!');
-}
-
-// 3. DIALOG NHẬP MẬT KHẨU CHO TRẠM
+// 5. DIALOG NHẬP MẬT KHẨU CHO TRẠM TRÊN SHEETS
 function openStationLoginDialog() {
   const ui = SpreadsheetApp.getUi();
   const stationResponse = ui.prompt('ĐĂNG NHẬP TRẠM Y TẾ', 'Nhập tên Trạm (Ví dụ: TYT_Xa_1, TYT_Xa_2, TYT_Xa_3, TYT_Xa_4):', ui.ButtonSet.OK_CANCEL);
@@ -1415,7 +1488,7 @@ function openStationLoginDialog() {
   }
 }
 
-// 4. HÀM TỰ ĐỘNG TỔNG HỢP SỐ LIỆU TỪ 4 TRẠM VÀO SHEET TỔNG
+// 6. HÀM TỰ ĐỘNG TỔNG HỢP SỐ LIỆU TỪ 4 TRẠM VÀO SHEET TỔNG
 function consolidateMonthlyReport() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const masterSheet = ss.getSheetByName('00_TONG_HOP_4_TRAM');
@@ -1462,10 +1535,9 @@ function consolidateMonthlyReport() {
   }
 
   masterSheet.getRange(2, 1, summaryRows.length, 9).setValues(summaryRows);
-  SpreadsheetApp.getUi().alert('✅ Đã cập nhật thành công Bảng Báo Cáo Tổng Hợp XNT của 4 Trạm Y Tế!');
 }
 
-// 5. CHUYỂN KỲ BÁO CÁO THÁNG MỚI
+// 7. CHUYỂN KỲ BÁO CÁO THÁNG MỚI
 function carryOverToNextMonth() {
   const ui = SpreadsheetApp.getUi();
   const confirm = ui.alert('XÁC NHẬN CHUYỂN KỲ', 'Bạn có chắc chắn muốn lấy Tồn Cuối Tháng Này làm Tồn Đầu Tháng Sau cho cả 4 Trạm?', ui.ButtonSet.YES_NO);
