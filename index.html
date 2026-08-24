@@ -1571,7 +1571,26 @@ function carryOverToNextMonth() {
             if (!codeDisplay) return;
 
             const codeText = codeDisplay.innerText;
-            navigator.clipboard.writeText(codeText).then(() => {
+            let success = false;
+
+            // Use document.execCommand('copy') to bypass iframe Clipboard API permissions restrictions
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                success = document.execCommand('copy');
+            } catch (err) {
+                console.error('execCommand copy failed:', err);
+            }
+            document.body.removeChild(textarea);
+
+            if (success) {
                 showToast("Đã copy toàn bộ mã Google Apps Script!");
                 const btn = document.getElementById('btn-copy-gas');
                 if (btn) {
@@ -1580,7 +1599,25 @@ function carryOverToNextMonth() {
                         btn.innerHTML = `<i class="fa-solid fa-copy"></i> Sao Chép Toàn Bộ Mã Script`;
                     }, 2500);
                 }
-            });
+            } else {
+                // Fallback attempt with try/catch if execCommand is unsupported
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(codeText).then(() => {
+                        showToast("Đã copy toàn bộ mã Google Apps Script!");
+                        const btn = document.getElementById('btn-copy-gas');
+                        if (btn) {
+                            btn.innerHTML = `<i class="fa-solid fa-check"></i> Đã Copy Script!`;
+                            setTimeout(() => {
+                                btn.innerHTML = `<i class="fa-solid fa-copy"></i> Sao Chép Toàn Bộ Mã Script`;
+                            }, 2500);
+                        }
+                    }).catch(() => {
+                        showToast("Không thể tự động copy. Vui lòng tô bôi đen và copy thủ công!", "error");
+                    });
+                } else {
+                    showToast("Không thể tự động copy. Vui lòng tô bôi đen và copy thủ công!", "error");
+                }
+            }
         }
     </script>
 </body>
