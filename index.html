@@ -248,10 +248,10 @@
                             <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Chọn Đơn Vị Trạm Y Tế Nhập Liệu:</span>
                             <div class="flex items-center gap-3 mt-1">
                                 <select id="select-active-station" onchange="handleStationSelectChange()" class="bg-slate-800 text-amber-300 font-bold text-sm sm:text-base py-1 px-3 rounded-lg border border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer">
-                                    <option value="TYT Xã 1">Trạm Y Tế Xã 1</option>
-                                    <option value="TYT Xã 2">Trạm Y Tế Xã 2</option>
-                                    <option value="TYT Xã 3">Trạm Y Tế Xã 3</option>
-                                    <option value="TYT Xã 4">Trạm Y Tế Xã 4</option>
+                                    <option value="ĐỨC TÂN">Trạm Y Tế Xã 1</option>
+                                    <option value="THỊ TRẤN">Trạm Y Tế Xã 2</option>
+                                    <option value="ĐỨC HÒA">Trạm Y Tế Xã 3</option>
+                                    <option value="ĐỨC PHÚ">Trạm Y Tế Xã 4</option>
                                 </select>
                                 <span id="active-station-display" class="bg-amber-200 text-amber-900 text-xs px-2.5 py-0.5 rounded-full font-extrabold border border-amber-300">
                                     CHƯA XÁC THỰC
@@ -277,7 +277,7 @@
                         </div>
                         <h3 class="text-lg font-bold">Quyền Nhập Liệu Đang Khóa</h3>
                         <p class="text-xs text-slate-300 max-w-md mt-1 mb-4 leading-relaxed">
-                            Bạn đang xem <strong class="text-amber-300" id="lock-station-name">TYT Xã 1</strong>. Để nhập hoặc chỉnh sửa số liệu báo cáo, vui lòng đăng nhập mật khẩu xác thực của trạm này.
+                            Bạn đang xem <strong class="text-amber-300" id="lock-station-name">ĐỨC TÂN</strong>. Để nhập hoặc chỉnh sửa số liệu báo cáo, vui lòng đăng nhập mật khẩu xác thực của trạm này.
                         </p>
                         <button onclick="promptStationAuthModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-xs transition-all flex items-center gap-2 shadow-lg">
                             <i class="fa-solid fa-key"></i> Đăng Nhập Mật Khẩu Trạm
@@ -286,7 +286,7 @@
 
                     <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
                         <h4 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-file-pen text-teal-700"></i> Bảng Báo Cáo Tháng Cho: <span id="entry-station-title" class="text-teal-800 font-black">TYT Xã 1</span>
+                            <i class="fa-solid fa-file-pen text-teal-700"></i> Bảng Báo Cáo Tháng Cho: <span id="entry-station-title" class="text-teal-800 font-black">ĐỨC TÂN</span>
                         </h4>
                         <span class="text-[11px] text-slate-500 font-medium">* Dữ liệu sau khi lưu sẽ tự động ghi vào Sheet trạm và Sheet Lưu Trữ Lịch Sử Tháng trên Google Sheet</span>
                     </div>
@@ -345,28 +345,28 @@
                         <thead>
                             <tr class="bg-slate-900 text-white font-bold text-center">
                                 <th rowspan="2" class="p-3 border-r border-slate-700 text-left min-w-[200px] sticky left-0 bg-slate-900 z-10">Tên Vắc Xin / Vật Tư</th>
-                                <th colspan="4" class="p-2 border-r border-slate-700 bg-teal-900">TYT Xã 1</th>
-                                <th colspan="4" class="p-2 border-r border-slate-700 bg-indigo-900">TYT Xã 2</th>
-                                <th colspan="4" class="p-2 border-r border-slate-700 bg-slate-800">TYT Xã 3</th>
-                                <th colspan="4" class="p-2 bg-amber-900">TYT Xã 4</th>
+                                <th colspan="4" class="p-2 border-r border-slate-700 bg-teal-900">ĐỨC TÂN</th>
+                                <th colspan="4" class="p-2 border-r border-slate-700 bg-indigo-900">THỊ TRẤN</th>
+                                <th colspan="4" class="p-2 border-r border-slate-700 bg-slate-800">ĐỨC HÒA</th>
+                                <th colspan="4" class="p-2 bg-amber-900">ĐỨC PHÚ</th>
                             </tr>
                             <tr class="bg-slate-800 text-slate-300 font-semibold text-center border-t border-slate-700 text-[11px]">
-                                <!-- TYT Xã 1 -->
+                                <!-- ĐỨC TÂN -->
                                 <th class="p-2 border-r border-slate-700 min-w-[65px]">Tồn Đầu</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[65px] text-emerald-300">Nhập</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[65px] text-indigo-300">Xuất</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[70px] bg-teal-950 text-teal-300 font-bold">Tồn Cuối</th>
-                                <!-- TYT Xã 2 -->
+                                <!-- THỊ TRẤN -->
                                 <th class="p-2 border-r border-slate-700 min-w-[65px]">Tồn Đầu</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[65px] text-emerald-300">Nhập</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[65px] text-indigo-300">Xuất</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[70px] bg-indigo-950 text-indigo-300 font-bold">Tồn Cuối</th>
-                                <!-- TYT Xã 3 -->
+                                <!-- ĐỨC HÒA -->
                                 <th class="p-2 border-r border-slate-700 min-w-[65px]">Tồn Đầu</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[65px] text-emerald-300">Nhập</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[65px] text-indigo-300">Xuất</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[70px] bg-slate-950 text-slate-200 font-bold">Tồn Cuối</th>
-                                <!-- TYT Xã 4 -->
+                                <!-- ĐỨC PHÚ -->
                                 <th class="p-2 border-r border-slate-700 min-w-[65px]">Tồn Đầu</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[65px] text-emerald-300">Nhập</th>
                                 <th class="p-2 border-r border-slate-700 min-w-[65px] text-indigo-300">Xuất</th>
@@ -592,12 +592,12 @@
             
             <form onsubmit="handleStationAuthSubmit(event)" class="p-5 space-y-4">
                 <div>
-                    <label class="block font-semibold text-slate-700 text-xs mb-1">Chọn Trạm Y Tế Nhập Liệu:</label>
+                    <label class="block font-semibold text-slate-700 text-xs mb-1">Chọn Điểm Trạm Y Tế Nhập Liệu:</label>
                     <select id="modal-auth-station-select" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs font-bold bg-white focus:ring-2 focus:ring-teal-500">
-                        <option value="TYT Xã 1">Trạm Y Tế Xã 1</option>
-                        <option value="TYT Xã 2">Trạm Y Tế Xã 2</option>
-                        <option value="TYT Xã 3">Trạm Y Tế Xã 3</option>
-                        <option value="TYT Xã 4">Trạm Y Tế Xã 4</option>
+                        <option value="ĐỨC TÂN">ĐỨC TÂN</option>
+                        <option value="THỊ TRẤN">THỊ TRẤN</option>
+                        <option value="ĐỨC HÒA">ĐỨC HÒA</option>
+                        <option value="ĐỨC PHÚ">ĐỨC PHÚ</option>
                     </select>
                 </div>
 
@@ -650,10 +650,10 @@
 
         // Passwords for 4 Health Stations
         const STATION_PASSWORDS = {
-            "TYT Xã 1": "123456",
-            "TYT Xã 2": "123456",
-            "TYT Xã 3": "123456",
-            "TYT Xã 4": "123456"
+            "ĐỨC TÂN": "123456",
+            "THỊ TRẤN": "123456",
+            "ĐỨC HÒA": "123456",
+            "ĐỨC PHÚ": "123456"
         };
 
         // Database storing Monthly Reports per station
@@ -736,7 +736,7 @@
             }
 
             // 2. TẢI BÁO CÁO CỦA TỪNG TRẠM
-            const stations = ["TYT Xã 1", "TYT Xã 2", "TYT Xã 3", "TYT Xã 4"];
+            const stations = ["ĐỨC TÂN", "THỊ TRẤN", "ĐỨC HÒA", "ĐỨC PHÚ"];
             const sheetNames = ["TYT_Xa_1", "TYT_Xa_2", "TYT_Xa_3", "TYT_Xa_4"];
             const period = document.getElementById('select-month-period')?.value || "2026-08";
 
@@ -860,13 +860,13 @@
         function initSampleData() {
             const period = "2026-08";
             monthlyDatabase[period] = {
-                "TYT Xã 1": {},
-                "TYT Xã 2": {},
-                "TYT Xã 3": {},
-                "TYT Xã 4": {}
+                "ĐỨC TÂN": {},
+                "THỊ TRẤN": {},
+                "ĐỨC HÒA": {},
+                "ĐỨC PHÚ": {}
             };
 
-            const stations = ["TYT Xã 1", "TYT Xã 2", "TYT Xã 3", "TYT Xã 4"];
+            const stations = ["ĐỨC TÂN", "THỊ TRẤN", "ĐỨC HÒA", "ĐỨC PHÚ"];
             
             stations.forEach((st, idx) => {
                 MASTER_ITEMS.forEach((item, itemIdx) => {
@@ -919,9 +919,9 @@
 
             if (!monthlyDatabase[selectedPeriod]) {
                 monthlyDatabase[selectedPeriod] = {
-                    "TYT Xã 1": {}, "TYT Xã 2": {}, "TYT Xã 3": {}, "TYT Xã 4": {}
+                    "ĐỨC TÂN": {}, "THỊ TRẤN": {}, "ĐỨC HÒA": {}, "ĐỨC PHÚ": {}
                 };
-                ["TYT Xã 1", "TYT Xã 2", "TYT Xã 3", "TYT Xã 4"].forEach(st => {
+                ["ĐỨC TÂN", "THỊ TRẤN", "ĐỨC HÒA", "ĐỨC PHÚ"].forEach(st => {
                     MASTER_ITEMS.forEach(item => {
                         monthlyDatabase[selectedPeriod][st][item.id] = { opening: 0, imported: 0, used: 0, waste: 0, note: "" };
                     });
@@ -989,7 +989,7 @@
 
                 let itemOpening = 0, itemImported = 0, itemUsed = 0, itemWaste = 0;
 
-                ["TYT Xã 1", "TYT Xã 2", "TYT Xã 3", "TYT Xã 4"].forEach(st => {
+                ["ĐỨC TÂN", "THỊ TRẤN", "ĐỨC HÒA", "ĐỨC PHÚ"].forEach(st => {
                     const rec = (monthlyDatabase[period] && monthlyDatabase[period][st] && monthlyDatabase[period][st][item.id]) 
                         ? monthlyDatabase[period][st][item.id] 
                         : { opening: 0, imported: 0, used: 0, waste: 0 };
@@ -1056,7 +1056,7 @@
 
         function promptStationAuthModal() {
             const stationSelect = document.getElementById('select-active-station');
-            const currentSelected = stationSelect ? stationSelect.value : "TYT Xã 1";
+            const currentSelected = stationSelect ? stationSelect.value : "ĐỨC TÂN";
             
             const modalSelect = document.getElementById('modal-auth-station-select');
             if (modalSelect) modalSelect.value = currentSelected;
@@ -1097,7 +1097,7 @@
 
         function handleStationSelectChange() {
             const stationSelect = document.getElementById('select-active-station');
-            const selected = stationSelect ? stationSelect.value : "TYT Xã 1";
+            const selected = stationSelect ? stationSelect.value : "ĐỨC TÂN";
 
             if (authenticatedStation !== selected) {
                 const lockName = document.getElementById('lock-station-name');
@@ -1112,7 +1112,7 @@
 
         function checkStationLockState() {
             const stationSelect = document.getElementById('select-active-station');
-            const selectedStation = stationSelect ? stationSelect.value : "TYT Xã 1";
+            const selectedStation = stationSelect ? stationSelect.value : "ĐỨC TÂN";
 
             const lockOverlay = document.getElementById('lock-overlay');
             const activeBadge = document.getElementById('active-station-display');
@@ -1305,10 +1305,10 @@
             let rowsHtml = '';
 
             MASTER_ITEMS.forEach(item => {
-                let st1 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 1"] && monthlyDatabase[period]["TYT Xã 1"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
-                let st2 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 2"] && monthlyDatabase[period]["TYT Xã 2"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
-                let st3 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 3"] && monthlyDatabase[period]["TYT Xã 3"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
-                let st4 = (monthlyDatabase[period] && monthlyDatabase[period]["TYT Xã 4"] && monthlyDatabase[period]["TYT Xã 4"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
+                let st1 = (monthlyDatabase[period] && monthlyDatabase[period]["ĐỨC TÂN"] && monthlyDatabase[period]["ĐỨC TÂN"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
+                let st2 = (monthlyDatabase[period] && monthlyDatabase[period]["THỊ TRẤN"] && monthlyDatabase[period]["THỊ TRẤN"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
+                let st3 = (monthlyDatabase[period] && monthlyDatabase[period]["ĐỨC HÒA"] && monthlyDatabase[period]["ĐỨC HÒA"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
+                let st4 = (monthlyDatabase[period] && monthlyDatabase[period]["ĐỨC PHÚ"] && monthlyDatabase[period]["ĐỨC PHÚ"][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
 
                 let c1 = st1.opening + st1.imported - st1.used - st1.waste;
                 let c2 = st2.opening + st2.imported - st2.used - st2.waste;
@@ -1321,25 +1321,25 @@
                             ${item.name}
                             <span class="block text-[10px] text-slate-400 font-mono">${item.id} (${item.unit})</span>
                         </td>
-                        <!-- TYT Xã 1 -->
+                        <!-- ĐỨC TÂN -->
                         <td class="p-2 text-right font-mono text-slate-700 border-l border-slate-200">${st1.opening.toLocaleString()}</td>
                         <td class="p-2 text-right font-mono font-semibold text-emerald-700 bg-emerald-50/30">${st1.imported > 0 ? '+' + st1.imported.toLocaleString() : '0'}</td>
                         <td class="p-2 text-right font-mono font-semibold text-indigo-700 bg-indigo-50/30">${st1.used > 0 ? '-' + st1.used.toLocaleString() : '0'}</td>
                         <td class="p-2 text-right font-mono font-black text-teal-900 bg-teal-100/60">${c1.toLocaleString()}</td>
 
-                        <!-- TYT Xã 2 -->
+                        <!-- THỊ TRẤN -->
                         <td class="p-2 text-right font-mono text-slate-700 border-l border-slate-200">${st2.opening.toLocaleString()}</td>
                         <td class="p-2 text-right font-mono font-semibold text-emerald-700 bg-emerald-50/30">${st2.imported > 0 ? '+' + st2.imported.toLocaleString() : '0'}</td>
                         <td class="p-2 text-right font-mono font-semibold text-indigo-700 bg-indigo-50/30">${st2.used > 0 ? '-' + st2.used.toLocaleString() : '0'}</td>
                         <td class="p-2 text-right font-mono font-black text-indigo-900 bg-indigo-100/60">${c2.toLocaleString()}</td>
 
-                        <!-- TYT Xã 3 -->
+                        <!-- ĐỨC HÒA -->
                         <td class="p-2 text-right font-mono text-slate-700 border-l border-slate-200">${st3.opening.toLocaleString()}</td>
                         <td class="p-2 text-right font-mono font-semibold text-emerald-700 bg-emerald-50/30">${st3.imported > 0 ? '+' + st3.imported.toLocaleString() : '0'}</td>
                         <td class="p-2 text-right font-mono font-semibold text-indigo-700 bg-indigo-50/30">${st3.used > 0 ? '-' + st3.used.toLocaleString() : '0'}</td>
                         <td class="p-2 text-right font-mono font-black text-slate-900 bg-slate-200/70">${c3.toLocaleString()}</td>
 
-                        <!-- TYT Xã 4 -->
+                        <!-- ĐỨC PHÚ -->
                         <td class="p-2 text-right font-mono text-slate-700 border-l border-slate-200">${st4.opening.toLocaleString()}</td>
                         <td class="p-2 text-right font-mono font-semibold text-emerald-700 bg-emerald-50/30">${st4.imported > 0 ? '+' + st4.imported.toLocaleString() : '0'}</td>
                         <td class="p-2 text-right font-mono font-semibold text-indigo-700 bg-indigo-50/30">${st4.used > 0 ? '-' + st4.used.toLocaleString() : '0'}</td>
@@ -1359,7 +1359,7 @@
 
             MASTER_ITEMS.forEach((item, idx) => {
                 let itemOpening = 0, itemImported = 0, itemUsed = 0, itemWaste = 0;
-                ["TYT Xã 1", "TYT Xã 2", "TYT Xã 3", "TYT Xã 4"].forEach(st => {
+                ["ĐỨC TÂN", "THỊ TRẤN", "ĐỨC HÒA", "ĐỨC PHÚ"].forEach(st => {
                     const rec = (monthlyDatabase[period] && monthlyDatabase[period][st] && monthlyDatabase[period][st][item.id]) || { opening: 0, imported: 0, used: 0, waste: 0 };
                     itemOpening += rec.opening;
                     itemImported += rec.imported;
@@ -1465,10 +1465,10 @@ function doPost(e) {
       const items = data.items || [];
       
       const sheetNameMap = {
-        "TYT Xã 1": "TYT_Xa_1",
-        "TYT Xã 2": "TYT_Xa_2",
-        "TYT Xã 3": "TYT_Xa_3",
-        "TYT Xã 4": "TYT_Xa_4"
+        "ĐỨC TÂN": "TYT_Xa_1",
+        "THỊ TRẤN": "TYT_Xa_2",
+        "ĐỨC HÒA": "TYT_Xa_3",
+        "ĐỨC PHÚ": "TYT_Xa_4"
       };
       
       const tabName = sheetNameMap[station] || station.replace(/ /g, "_");
