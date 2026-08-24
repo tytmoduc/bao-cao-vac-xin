@@ -1076,38 +1076,8 @@
             if (modal) modal.classList.add('hidden');
         }
 
-        function handleStationAuthSubmit(e) {
-            e.preventDefault();
-            const selectedStation = document.getElementById('modal-auth-station-select').value;
-            const inputPass = document.getElementById('modal-auth-password').value;
-
-            if (STATION_PASSWORDS[selectedStation] && inputPass === STATION_PASSWORDS[selectedStation]) {
-                authenticatedStation = selectedStation;
-                const activeStationEl = document.getElementById('select-active-station');
-                if (activeStationEl) activeStationEl.value = selectedStation;
-
-                closeStationAuthModal();
-                checkStationLockState();
-                showToast(`Xác thực thành công! Đã mở quyền nhập liệu cho ${selectedStation}`);
-            } else {
-                const errMsg = document.getElementById('auth-error-msg');
-                if (errMsg) errMsg.classList.remove('hidden');
-            }
-        }
-
         function handleStationSelectChange() {
-            const stationSelect = document.getElementById('select-active-station');
-            const selected = stationSelect ? stationSelect.value : "ĐỨC TÂN";
-
-            if (authenticatedStation !== selected) {
-                const lockName = document.getElementById('lock-station-name');
-                if (lockName) lockName.innerText = selected;
-                
-                const lockOverlay = document.getElementById('lock-overlay');
-                if (lockOverlay) lockOverlay.classList.remove('hidden');
-            } else {
-                checkStationLockState();
-            }
+            checkStationLockState();
         }
 
         function checkStationLockState() {
@@ -1115,10 +1085,16 @@
             const selectedStation = stationSelect ? stationSelect.value : "ĐỨC TÂN";
 
             const lockOverlay = document.getElementById('lock-overlay');
+            const lockName = document.getElementById('lock-station-name');
             const activeBadge = document.getElementById('active-station-display');
             const authBtnText = document.getElementById('auth-btn-text');
             const headerStationBadge = document.getElementById('current-station-badge');
             const entryTitle = document.getElementById('entry-station-title');
+
+            if (lockName) lockName.innerText = selectedStation;
+            if (entryTitle) entryTitle.innerText = selectedStation;
+
+            renderStationEntryTable(selectedStation);
 
             if (authenticatedStation === selectedStation) {
                 if (lockOverlay) lockOverlay.classList.add('hidden');
@@ -1128,14 +1104,8 @@
                 }
                 if (authBtnText) authBtnText.innerText = `Đã Mở: ${selectedStation}`;
                 if (headerStationBadge) headerStationBadge.innerText = `Đang Nhập Liệu: ${selectedStation}`;
-                if (entryTitle) entryTitle.innerText = selectedStation;
-                
-                renderStationEntryTable(selectedStation);
             } else {
-                const lockName = document.getElementById('lock-station-name');
-                if (lockName) lockName.innerText = selectedStation;
                 if (lockOverlay) lockOverlay.classList.remove('hidden');
-
                 if (activeBadge) {
                     activeBadge.innerText = `CHƯA XÁC THỰC: ${selectedStation}`;
                     activeBadge.className = "bg-amber-200 text-amber-900 text-xs px-2.5 py-0.5 rounded-full font-extrabold border border-amber-300";
@@ -1613,7 +1583,7 @@ function init4StationSpreadsheet() {
 // 5. DIALOG NHẬP MẬT KHẨU CHO TRẠM TRÊN SHEETS
 function openStationLoginDialog() {
   const ui = SpreadsheetApp.getUi();
-  const stationResponse = ui.prompt('ĐĂNG NHẬP TRẠM Y TẾ', 'Nhập tên Trạm (Ví dụ: TYT_Xa_1, TYT_Xa_2, TYT_Xa_3, TYT_Xa_4):', ui.ButtonSet.OK_CANCEL);
+  const stationResponse = ui.prompt('ĐĂNG NHẬP TRẠM Y TẾ', 'Nhập tên Trạm (Ví dụ: ĐỨC TÂN, THỊ TRẤN, ĐỨC HÒA, ĐỨC PHÚ):', ui.ButtonSet.OK_CANCEL);
   
   if (stationResponse.getSelectedButton() !== ui.Button.OK) return;
   const stationName = stationResponse.getResponseText().trim();
