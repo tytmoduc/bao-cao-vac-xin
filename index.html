@@ -8,14 +8,14 @@
     <script>
         // =========================================================================
         // CẤU HÌNH CỐ ĐỊNH NẰM NGAY ĐẦU THẺ <HEAD>
-        // Tự động lấy dữ liệu mới nhất từ Google Sheets ngay khi truy cập trang web
+        // Tự động lấy dữ liệu danh mục vắc xin & báo cáo từ Google Sheets khi mở web
         // =========================================================================
         window.CONFIG = {
             // 1. Đường dẫn Google Sheet chính
-            GOOGLE_SHEET_URL: "https://docs.google.com/spreadsheets/d/1TOreIqAK8d-nUaZGJFJB4oz6F3fTixqJSTTsOSMHEJI/edit",
+            GOOGLE_SHEET_URL: "https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit",
             
             // 2. ID file Google Sheet (Trích xuất từ URL)
-            SPREADSHEET_ID: "1TOreIqAK8d-nUaZGJFJB4oz6F3fTixqJSTTsOSMHEJI",
+            SPREADSHEET_ID: "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms",
 
             // 3. Tự động cập nhật dữ liệu từ Google Sheet khi tải trang web
             AUTO_FETCH_ON_LOAD: true,
@@ -172,7 +172,7 @@
                     <i class="fa-solid fa-columns text-indigo-600"></i> So Sánh 4 Trạm Y Tế
                 </button>
                 <button onclick="showTab('catalog-manage')" id="tab-btn-catalog-manage" class="tab-btn text-slate-600 hover:text-teal-800 py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
-                    <i class="fa-solid fa-boxes-packing text-emerald-600"></i> Quản Lý Danh Mục Vắc Xin
+                    <i class="fa-solid fa-boxes-packing text-emerald-600"></i> Danh Mục Vắc Xin Tối Ưu
                 </button>
                 <button onclick="showTab('setup-guide')" id="tab-btn-setup-guide" class="tab-btn text-slate-600 hover:text-amber-800 py-3 px-4 text-xs sm:text-sm font-semibold flex items-center gap-2 rounded-t-lg transition-all">
                     <i class="fa-solid fa-map-location-dot text-amber-600"></i> Vị Trí Lưu Số Liệu Google Sheet
@@ -313,7 +313,7 @@
                     </div>
                 </div>
 
-                <!-- BOTTOM SAVE BUTTON BAR (MOVED TO BOTTOM AS REQUESTED) -->
+                <!-- BOTTOM SAVE BUTTON BAR -->
                 <div class="mt-6 bg-slate-900 text-white p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl border border-slate-800">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-lg flex items-center justify-center text-xl font-bold border border-emerald-500/30">
@@ -380,17 +380,19 @@
                 </div>
             </div>
 
-            <!-- Tab 4: Catalog Management -->
+            <!-- Tab 4: Catalog Management (Read-Only from Google Sheet 01_DANH_MUC_VAC_XIN) -->
             <div id="tab-content-catalog-manage" class="tab-content p-4 sm:p-6 hidden">
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 bg-slate-900 text-white p-4 rounded-xl shadow-md">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 bg-slate-900 text-white p-4 rounded-xl shadow-md border-l-4 border-emerald-500">
                     <div>
                         <h3 class="font-bold text-base flex items-center gap-2">
-                            <i class="fa-solid fa-boxes-packing text-emerald-400"></i> Quản Lý Danh Mục Vắc Xin & Vật Tư Y Tế
+                            <i class="fa-solid fa-shield-halved text-emerald-400"></i> Danh Mục Vắc Xin & Vật Tư Y Tế (Quản lý 1 chiều từ Google Sheet)
                         </h3>
-                        <p class="text-xs text-slate-300 mt-0.5">Bổ sung loại vắc xin hoặc vật tư mới khi phát sinh. Danh mục mới sẽ tự động cập nhật vào mẫu báo cáo của cả 4 trạm.</p>
+                        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                            🔒 <strong>Cơ chế bảo vệ dữ liệu:</strong> Danh mục vắc xin chuẩn được quản lý cố định trên Google Sheet (Sheet <code class="bg-slate-800 text-emerald-300 px-1 py-0.5 rounded font-mono">01_DANH_MUC_VAC_XIN</code>). Trạm y tế chỉ có quyền <strong>ĐỌC</strong> để nhập số liệu báo cáo, <strong>không thể xóa hay tự ý chỉnh sửa danh mục từ trang web</strong> để tránh mất mát dữ liệu của toàn huyện.
+                        </p>
                     </div>
-                    <button onclick="promptAddCatalogModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs transition-all flex items-center gap-2 shadow shrink-0">
-                        <i class="fa-solid fa-plus"></i> Thêm Vắc Xin / Vật Tư Mới
+                    <button onclick="fetchDataFromGoogleSheet()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-lg text-xs transition-all flex items-center gap-2 shadow shrink-0">
+                        <i class="fa-solid fa-arrows-rotate"></i> Tải Lại Danh Mục Từ Google Sheet
                     </button>
                 </div>
 
@@ -400,11 +402,11 @@
                             <tr class="bg-slate-800 text-white font-semibold text-center">
                                 <th class="p-3 border-r border-slate-700 w-12">STT</th>
                                 <th class="p-3 border-r border-slate-700 w-24">Mã Số</th>
-                                <th class="p-3 border-r border-slate-700 text-left">Tên Vắc Xin / Vật Tư</th>
+                                <th class="p-3 border-r border-slate-700 text-left">Tên Vắc Xin / Vật Tư Y Tế</th>
                                 <th class="p-3 border-r border-slate-700 w-20">ĐVT</th>
-                                <th class="p-3 border-r border-slate-700 w-36">Danh Mục</th>
+                                <th class="p-3 border-r border-slate-700 w-36">Phân Loại</th>
                                 <th class="p-3 border-r border-slate-700 w-28">Tồn Tối Thiểu</th>
-                                <th class="p-3 w-24">Thao Tác</th>
+                                <th class="p-3 w-36">Nguồn Dữ Liệu</th>
                             </tr>
                         </thead>
                         <tbody id="catalog-table-body" class="divide-y divide-slate-200 bg-white">
@@ -511,9 +513,9 @@
                                 </tr>
                                 <tr>
                                     <td class="p-2.5 border font-mono font-bold text-emerald-800 bg-emerald-50">01_DANH_MUC_VAC_XIN</td>
-                                    <td class="p-2.5 border font-medium">Quản lý danh mục vắc xin & vật tư y tế chuẩn</td>
+                                    <td class="p-2.5 border font-medium">Quản lý danh mục vắc xin & vật tư y tế chuẩn (1 chiều)</td>
                                     <td class="p-2.5 border font-semibold text-emerald-700">Quản trị viên / Cán bộ vắc xin</td>
-                                    <td class="p-2.5 border text-slate-600">Tự động đồng bộ từ trang web hoặc tạo tay</td>
+                                    <td class="p-2.5 border text-slate-600">Tạo trực tiếp trên Sheet, tự động đẩy về Web</td>
                                 </tr>
                                 <tr>
                                     <td class="p-2.5 border font-mono font-bold text-indigo-800">TYT_Xa_1</td>
@@ -578,57 +580,6 @@
         </div>
     </main>
 
-    <!-- Modal Add Vaccine Catalog Dialog -->
-    <div id="modal-add-catalog" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-100">
-            <div class="bg-gradient-to-r from-teal-800 to-slate-900 p-4 text-white flex items-center justify-between">
-                <h3 class="font-bold text-sm sm:text-base flex items-center gap-2">
-                    <i class="fa-solid fa-plus text-emerald-400"></i> Thêm Vắc Xin / Vật Tư Mới Vào Danh Mục
-                </h3>
-                <button onclick="closeAddCatalogModal()" class="text-white/70 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <form onsubmit="handleAddCatalogSubmit(event)" class="p-5 space-y-4">
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-semibold text-slate-700 text-xs mb-1">Mã Số (ID): <span class="text-rose-500">*</span></label>
-                        <input type="text" id="cat-input-id" required placeholder="Ví dụ: VX-11" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-teal-500 uppercase font-mono">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 text-xs mb-1">Phân Loại: <span class="text-rose-500">*</span></label>
-                        <select id="cat-input-category" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white font-semibold focus:ring-2 focus:ring-teal-500">
-                            <option value="VẮC XIN TCMR">Vắc xin TCMR</option>
-                            <option value="VẬT TƯ TIÊM CHỦNG">Vật tư tiêm chủng</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block font-semibold text-slate-700 text-xs mb-1">Tên Vắc Xin / Vật Tư Y Tế: <span class="text-rose-500">*</span></label>
-                    <input type="text" id="cat-input-name" required placeholder="Ví dụ: Vắc xin Cúm mùa..." class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-teal-500">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-semibold text-slate-700 text-xs mb-1">Đơn Vị Tính (ĐVT): <span class="text-rose-500">*</span></label>
-                        <input type="text" id="cat-input-unit" required placeholder="Liều, Cái, Lọ..." class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-teal-500">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 text-xs mb-1">Mức Tồn Tối Thiểu:</label>
-                        <input type="number" id="cat-input-min" min="0" value="100" class="w-full border border-slate-300 rounded-lg p-2 text-xs font-mono focus:ring-2 focus:ring-teal-500">
-                    </div>
-                </div>
-
-                <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
-                    <button type="button" onclick="closeAddCatalogModal()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium text-xs hover:bg-slate-50">Hủy</button>
-                    <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs shadow-md flex items-center gap-1">
-                        <i class="fa-solid fa-plus"></i> LƯU VÀO DANH MỤC
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Modal Login Dialog -->
     <div id="modal-station-auth" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100">
@@ -680,7 +631,7 @@
     </div>
 
     <script>
-        // MASTER ITEMS catalog
+        // MASTER ITEMS catalog (Single Source of Truth fetched strictly 1-way from Google Sheets: 01_DANH_MUC_VAC_XIN)
         let MASTER_ITEMS = [
             { id: "VX-01", name: "Vắc xin Lao (BCG)", unit: "Liều", category: "VẮC XIN TCMR", minStock: 100 },
             { id: "VX-02", name: "Vắc xin Viêm gan B sơ sinh (HepB)", unit: "Liều", category: "VẮC XIN TCMR", minStock: 100 },
@@ -749,8 +700,42 @@
                 return;
             }
 
-            updateSheetStatusBadge("loading", "Đang tự động tải dữ liệu từ Google Sheets...");
+            updateSheetStatusBadge("loading", "Đang tải danh mục 1 chiều từ Google Sheets...");
 
+            // 1. TỰ ĐỘNG TẢI DANH MỤC CỐ ĐỊNH TỪ SHEET 01_DANH_MUC_VAC_XIN
+            try {
+                const catFetchUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&sheet=01_DANH_MUC_VAC_XIN`;
+                const catResponse = await fetch(catFetchUrl);
+                if (catResponse.ok) {
+                    const catText = await catResponse.text();
+                    const jsonString = catText.substring(catText.indexOf('{'), catText.lastIndexOf('}') + 1);
+                    const catData = JSON.parse(jsonString);
+
+                    if (catData && catData.table && catData.table.rows) {
+                        const newMasterItems = [];
+                        catData.table.rows.forEach(row => {
+                            if (!row.c) return;
+                            const id = row.c[0]?.v ? String(row.c[0].v).trim() : null;
+                            const name = row.c[1]?.v ? String(row.c[1].v).trim() : null;
+                            if (!id || !name || id.toUpperCase() === "MÃ VẮC XIN/VẬT TƯ" || id.toUpperCase() === "STT" || id.toUpperCase() === "MÃ SỐ") return;
+
+                            const unit = row.c[2]?.v ? String(row.c[2].v).trim() : "Liều";
+                            const category = row.c[3]?.v ? String(row.c[3].v).trim() : "VẮC XIN TCMR";
+                            const minStock = Number(row.c[4]?.v) || 100;
+
+                            newMasterItems.push({ id, name, unit, category, minStock });
+                        });
+
+                        if (newMasterItems.length > 0) {
+                            MASTER_ITEMS = newMasterItems;
+                        }
+                    }
+                }
+            } catch (catErr) {
+                console.warn("Chưa thể tải dữ liệu từ tab 01_DANH_MUC_VAC_XIN:", catErr);
+            }
+
+            // 2. TẢI BÁO CÁO CỦA TỪNG TRẠM
             const stations = ["TYT Xã 1", "TYT Xã 2", "TYT Xã 3", "TYT Xã 4"];
             const sheetNames = ["TYT_Xa_1", "TYT_Xa_2", "TYT_Xa_3", "TYT_Xa_4"];
             const period = document.getElementById('select-month-period')?.value || "2026-08";
@@ -766,7 +751,6 @@
                 const gsheetTabName = sheetNames[i];
                 
                 try {
-                    // Fetch directly from Google Sheets Visualization API
                     const fetchUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(gsheetTabName)}`;
                     const response = await fetch(fetchUrl);
                     if (!response.ok) continue;
@@ -781,7 +765,7 @@
                         data.table.rows.forEach(row => {
                             if (!row.c) return;
                             const code = row.c[1]?.v ? String(row.c[1].v).trim() : null;
-                            if (!code) return;
+                            if (!code || code.toUpperCase() === "MÃ VẮC XIN/VẬT TƯ" || code.toUpperCase() === "STT" || code.toUpperCase() === "MÃ SỐ") return;
 
                             const opening = Number(row.c[4]?.v) || 0;
                             const imported = Number(row.c[5]?.v) || 0;
@@ -798,20 +782,17 @@
                 }
             }
 
-            if (successCount > 0) {
-                renderSummaryTable();
-                renderCompareTable();
-                renderCatalogTable();
-                if (authenticatedStation) renderStationEntryTable(authenticatedStation);
+            renderSummaryTable();
+            renderCompareTable();
+            renderCatalogTable();
+            if (authenticatedStation) renderStationEntryTable(authenticatedStation);
 
+            if (successCount > 0) {
                 const now = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-                updateSheetStatusBadge(true, `Tự động cập nhật từ Sheet lúc ${now}`);
-                showToast(`✅ Đã tự động lấy dữ liệu từ Google Sheets cho ${successCount}/4 Trạm!`);
+                updateSheetStatusBadge(true, `Danh mục & Báo cáo đã nạp lúc ${now}`);
+                showToast(`✅ Đã đồng bộ danh mục 1 chiều & báo cáo cho ${successCount}/4 Trạm!`);
             } else {
-                updateSheetStatusBadge("warning", "Chế độ xem trước (Lưu ý: Cần chia sẻ Sheet ở chế độ 'Bất kỳ ai có liên kết')");
-                renderSummaryTable();
-                renderCompareTable();
-                renderCatalogTable();
+                updateSheetStatusBadge("warning", "Chế độ xem trước (Lưu ý: Cần mở quyền xem cho Sheet)");
             }
         }
 
@@ -824,7 +805,7 @@
                 badge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> ${textMessage || 'Đã kết nối'}`;
             } else if (status === "loading") {
                 badge.className = "bg-amber-500/20 text-amber-300 text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-amber-400/30 flex items-center gap-1";
-                badge.innerHTML = `<i class="fa-solid fa-arrows-rotate text-amber-400 animate-spin"></i> ${textMessage || 'Đang tự động đồng bộ...'}`;
+                badge.innerHTML = `<i class="fa-solid fa-arrows-rotate text-amber-400 animate-spin"></i> ${textMessage || 'Đang nạp...'}`;
             } else if (status === "warning") {
                 badge.className = "bg-amber-500/20 text-amber-200 text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-amber-400/30 flex items-center gap-1";
                 badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> ${textMessage}`;
@@ -955,87 +936,6 @@
             showToast(`Đã chuyển sang số liệu ${selectedPeriod}`);
         }
 
-        function promptAddCatalogModal() {
-            document.getElementById('cat-input-id').value = `VX-${String(MASTER_ITEMS.length + 1).padStart(2, '0')}`;
-            document.getElementById('cat-input-name').value = '';
-            document.getElementById('cat-input-unit').value = 'Liều';
-            document.getElementById('cat-input-min').value = '100';
-
-            const modal = document.getElementById('modal-add-catalog');
-            if (modal) modal.classList.remove('hidden');
-        }
-
-        function closeAddCatalogModal() {
-            const modal = document.getElementById('modal-add-catalog');
-            if (modal) modal.classList.add('hidden');
-        }
-
-        function handleAddCatalogSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('cat-input-id').value.trim().toUpperCase();
-            const category = document.getElementById('cat-input-category').value;
-            const name = document.getElementById('cat-input-name').value.trim();
-            const unit = document.getElementById('cat-input-unit').value.trim();
-            const minStock = parseInt(document.getElementById('cat-input-min').value) || 100;
-
-            if (MASTER_ITEMS.some(item => item.id === id)) {
-                showToast("Mã vắc xin / vật tư này đã tồn tại!", "error");
-                return;
-            }
-
-            const newItem = { id, name, unit, category, minStock };
-            MASTER_ITEMS.push(newItem);
-
-            // Ensure all periods and stations have entry slots for this new item
-            Object.keys(monthlyDatabase).forEach(period => {
-                ["TYT Xã 1", "TYT Xã 2", "TYT Xã 3", "TYT Xã 4"].forEach(st => {
-                    if (!monthlyDatabase[period][st]) monthlyDatabase[period][st] = {};
-                    if (!monthlyDatabase[period][st][id]) {
-                        monthlyDatabase[period][st][id] = { opening: 0, imported: 0, used: 0, waste: 0, note: "Mới bổ sung" };
-                    }
-                });
-            });
-
-            closeAddCatalogModal();
-            renderCatalogTable();
-            renderSummaryTable();
-            renderCompareTable();
-            if (authenticatedStation) renderStationEntryTable(authenticatedStation);
-
-            // TỰ ĐỘNG LƯU VÀ ĐỒNG BỘ DANH MỤC MỚI LÊN GOOGLE SHEETS QUA WEB APP API
-            const webAppUrl = window.CONFIG?.WEB_APP_URL || "";
-            if (webAppUrl) {
-                try {
-                    fetch(webAppUrl, {
-                        method: "POST",
-                        mode: "no-cors",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            action: "addCatalogItem",
-                            item: newItem
-                        })
-                    });
-                    showToast(`✅ Đã thêm mới "${name}" và đồng bộ tự động lên Google Sheets!`);
-                } catch (err) {
-                    console.error("Lỗi đồng bộ danh mục lên Google Sheets:", err);
-                    showToast(`✅ Đã thêm mới "${name}" (${id}) vào danh mục!`);
-                }
-            } else {
-                showToast(`✅ Đã thêm mới "${name}" (${id}) vào danh mục!`);
-            }
-        }
-
-        function deleteCatalogItem(itemId) {
-            if (!confirm(`Bạn có chắc chắn muốn xóa vắc xin/vật tư [${itemId}] khỏi danh mục?`)) return;
-
-            MASTER_ITEMS = MASTER_ITEMS.filter(item => item.id !== itemId);
-            renderCatalogTable();
-            renderSummaryTable();
-            renderCompareTable();
-            if (authenticatedStation) renderStationEntryTable(authenticatedStation);
-            showToast(`Đã xóa vắc xin ${itemId} khỏi danh mục!`);
-        }
-
         function renderCatalogTable() {
             const tbody = document.getElementById('catalog-table-body');
             if (!tbody) return;
@@ -1055,9 +955,9 @@
                         </td>
                         <td class="py-2.5 px-3 text-right font-mono font-bold text-slate-700">${item.minStock.toLocaleString()}</td>
                         <td class="py-2.5 px-3 text-center">
-                            <button onclick="deleteCatalogItem('${item.id}')" class="text-rose-600 hover:text-rose-800 font-bold p-1 rounded hover:bg-rose-50" title="Xóa khỏi danh mục">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
+                            <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-mono text-[10px] font-bold inline-flex items-center gap-1">
+                                <i class="fa-solid fa-lock text-[9px]"></i> 01_DANH_MUC_VAC_XIN
+                            </span>
                         </td>
                     </tr>
                 `;
@@ -1506,7 +1406,7 @@
             const gasCode = `/**
  * ==============================================================================
  * HỆ THỐNG TỔNG HỢP XUẤT NHẬP TỒN VẮC XIN & VẬT TƯ CHO 4 TRẠM Y TẾ
- * Tích hợp lưu tự động theo từng Trạm, theo Lịch sử từng Tháng & Bảng Tổng Hợp
+ * Quản lý danh mục 1 chiều từ Sheet 01_DANH_MUC_VAC_XIN
  * ==============================================================================
  */
 
@@ -1518,7 +1418,7 @@ function onOpen() {
     .addSeparator()
     .addItem('🔑 2. Mở Popup Nhập Liệu Trạm (Yêu Cầu Mật Khẩu)', 'openStationLoginDialog')
     .addItem('📊 3. Tính Bảng Tổng Hợp 4 Trạm Hàng Tháng', 'consolidateMonthlyReport')
-    .addItem('📦 4. Đồng Bộ Danh Mục Mới Sang 4 Trạm', 'syncCatalogToStations')
+    .addItem('📦 4. Đồng Bộ Danh Mục Chuẩn Sang 4 Trạm', 'syncCatalogToStations')
     .addSeparator()
     .addItem('🔄 5. Chuyển Tồn Cuối Tháng Này -> Tồn Đầu Tháng Sau', 'carryOverToNextMonth')
     .addToUi();
@@ -1553,7 +1453,7 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// 3. API ENDPOINT TỰ ĐỘNG LƯU BÁO CÁO VÀ ĐỒNG BỘ DANH MỤC (HTTP POST)
+// 3. API ENDPOINT TỰ ĐỘNG LƯU BÁO CÁO CỦA TRẠM (HTTP POST)
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
@@ -1627,19 +1527,6 @@ function doPost(e) {
                            .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // Xử lý BỔ SUNG DANH MỤC VẮC XIN/VẬT TƯ MỚI TỪ WEB
-    if (data.action === "addCatalogItem") {
-      const item = data.item;
-      const ss = SpreadsheetApp.getActiveSpreadsheet();
-      let catSheet = ss.getSheetByName('01_DANH_MUC_VAC_XIN');
-      if (catSheet) {
-        catSheet.appendRow([item.id, item.name, item.unit, item.category, item.minStock || 100]);
-      }
-      syncCatalogToStations();
-      return ContentService.createTextOutput(JSON.stringify({ status: "success", message: "Đã thêm danh mục mới!" }))
-                           .setMimeType(ContentService.MimeType.JSON);
-    }
-
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
                          .setMimeType(ContentService.MimeType.JSON);
@@ -1659,22 +1546,45 @@ function init4StationSpreadsheet() {
     }
     
     if (sheetName !== 'Cau_Hinh_Mat_Khau' && sheetName !== 'Luu_Tru_Bao_Cao_Cac_Thang' && sheetName !== '01_DANH_MUC_VAC_XIN') {
-      sheet.getRange(1, 1, 1, headers.length).setValues([headers])
-           .setBackground(sheetName === '00_TONG_HOP_4_TRAM' ? '#0f766e' : '#1e293b')
-           .setFontColor('#FFFFFF')
-           .setFontWeight('bold')
-           .setHorizontalAlignment('center');
-      sheet.setFrozenRows(1);
+      if (sheet.getLastRow() === 0) {
+        sheet.getRange(1, 1, 1, headers.length).setValues([headers])
+             .setBackground(sheetName === '00_TONG_HOP_4_TRAM' ? '#0f766e' : '#1e293b')
+             .setFontColor('#FFFFFF')
+             .setFontWeight('bold')
+             .setHorizontalAlignment('center');
+        sheet.setFrozenRows(1);
+      }
     }
   });
 
-  // Khởi tạo tiêu đề cho Sheet Danh Mục Vắc Xin
+  // Khởi tạo tiêu đề và dữ liệu cho Sheet Danh Mục Vắc Xin Cố Định
   const catSheet = ss.getSheetByName('01_DANH_MUC_VAC_XIN');
-  if (catSheet.getLastRow() === 0) {
+  if (catSheet.getLastRow() <= 1) {
+    catSheet.clear();
     catSheet.getRange(1, 1, 1, 5).setValues([['Mã Vắc Xin/Vật Tư', 'Tên Vắc Xin / Vật Tư', 'ĐVT', 'Phân Loại', 'Mức Tồn Tối Thiểu']])
             .setBackground('#047857').setFontColor('#FFFFFF').setFontWeight('bold');
     catSheet.setFrozenRows(1);
+
+    const defaultItems = [
+      ['VX-01', 'Vắc xin Lao (BCG)', 'Liều', 'VẮC XIN TCMR', 100],
+      ['VX-02', 'Vắc xin Viêm gan B sơ sinh (HepB)', 'Liều', 'VẮC XIN TCMR', 100],
+      ['VX-03', 'Vắc xin 5 trong 1 (DPT-VGB-Hib)', 'Liều', 'VẮC XIN TCMR', 200],
+      ['VX-04', 'Vắc xin Bại liệt uống (OPV)', 'Liều', 'VẮC XIN TCMR', 300],
+      ['VX-05', 'Vắc xin Bại liệt tiêm (IPV)', 'Liều', 'VẮC XIN TCMR', 150],
+      ['VX-06', 'Vắc xin Sởi (MV)', 'Liều', 'VẮC XIN TCMR', 150],
+      ['VX-07', 'Vắc xin Sởi - Rubella (MR)', 'Liều', 'VẮC XIN TCMR', 150],
+      ['VX-08', 'Vắc xin Viêm não Nhật Bản (JEV)', 'Liều', 'VẮC XIN TCMR', 100],
+      ['VX-09', 'Vắc xin Uốn ván (VAT)', 'Liều', 'VẮC XIN TCMR', 200],
+      ['VX-10', 'Vắc xin Bạch hầu - Uốn ván - Ho gà (DPT)', 'Liều', 'VẮC XIN TCMR', 150],
+      ['VT-01', 'Bơm kim tiêm 0.5ml (tự khóa)', 'Cái', 'VẬT TƯ TIÊM CHỦNG', 1000],
+      ['VT-02', 'Bơm kim tiêm 5ml (pha hồi chỉnh)', 'Cái', 'VẬT TƯ TIÊM CHỦNG', 300],
+      ['VT-03', 'Hộp an toàn chứa BKT (5 Liters)', 'Cái', 'VẬT TƯ TIÊM CHỦNG', 50]
+    ];
+    catSheet.getRange(2, 1, defaultItems.length, 5).setValues(defaultItems);
   }
+
+  // Tự động đồng bộ danh mục mẫu sang cả 4 trạm
+  syncCatalogToStations();
 
   // Khởi tạo tiêu đề cho Sheet Lịch Sử Lưu Trữ Các Tháng
   const logSheet = ss.getSheetByName('Luu_Tru_Bao_Cao_Cac_Thang');
@@ -1697,7 +1607,7 @@ function init4StationSpreadsheet() {
     ]);
   }
 
-  SpreadsheetApp.getUi().alert('✅ Đã khởi tạo cấu trúc Báo cáo XNT thành công!');
+  SpreadsheetApp.getUi().alert('✅ Đã khởi tạo cấu trúc Báo cáo XNT & Đồng bộ danh mục vắc xin thành công!');
 }
 
 // 5. DIALOG NHẬP MẬT KHẨU CHO TRẠM TRÊN SHEETS
@@ -1821,7 +1731,7 @@ function syncCatalogToStations() {
     return;
   }
 
-  const catalogData = catalogSheet.getRange(2, 1, catalogSheet.getLastRow() - 1, 3).getValues();
+  const catalogData = catalogSheet.getRange(2, 1, catalogSheet.getLastRow() - 1, 5).getValues();
   const stations = ['TYT_Xa_1', 'TYT_Xa_2', 'TYT_Xa_3', 'TYT_Xa_4'];
 
   stations.forEach(stName => {
@@ -1838,7 +1748,7 @@ function syncCatalogToStations() {
       const name = item[1];
       const unit = item[2];
 
-      if (code && !existingCodes.includes(code)) {
+      if (code && code !== "Mã Vắc Xin/Vật Tư" && !existingCodes.includes(code)) {
         const nextRow = stSheet.getLastRow() + 1;
         const stt = nextRow - 1;
         stSheet.getRange(nextRow, 1, 1, 10).setValues([[
@@ -1846,6 +1756,7 @@ function syncCatalogToStations() {
           \`=E\${nextRow}+F\${nextRow}-G\${nextRow}-H\${nextRow}\`,
           "Mới đồng bộ từ danh mục"
         ]]);
+        existingCodes.push(code);
       }
     });
   });
